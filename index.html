@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="簡約心理測驗 — 探索你的思維傾向" />
+  <title>北捷眾生怪</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="global-background" aria-hidden="true"></div>
+  <div class="app">
+    <div class="brand-logo">
+      <img
+        src="image/網頁副標.png"
+        alt="心理測驗副標"
+        class="site-subtitle"
+      />
+      <img
+        src="image/logo03.png"
+        alt="心理測驗標題"
+        class="site-logo"
+        id="home-title"
+      />
+    </div>
+
+    <main class="main">
+      <!-- 首頁 -->
+      <section id="screen-home" class="screen screen--home screen--active" aria-labelledby="home-title">
+        <div class="home-cta">
+          <button type="button" class="btn btn--primary" id="btn-start" autofocus>
+            開始測驗
+          </button>
+        </div>
+      </section>
+
+      <!-- 測驗中 -->
+      <section id="screen-quiz" class="screen" aria-live="polite" aria-hidden="true">
+        <div class="quiz-shell">
+          <div class="progress-wrap">
+            <div class="progress-meta">
+              <span class="progress-label">進度</span>
+              <span class="progress-count"><span id="progress-current">1</span> / <span id="progress-total">3</span></span>
+            </div>
+            <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="33" id="progress-bar-container">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="card card--question" id="question-card">
+            <p class="question-index" id="question-index">題目 1</p>
+            <h2 class="title title--md" id="question-text"></h2>
+            <ul class="options" id="options-list" role="list"></ul>
+            <div class="quiz-nav">
+              <button type="button" class="btn-prev" id="btn-prev" hidden aria-label="回到上一題">
+                上一題
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 結果頁 -->
+      <section id="screen-result" class="screen" aria-labelledby="result-title">
+        <div class="card card--result">
+          <p class="result-tag" id="result-tag">結果</p>
+          <h2 class="title title--lg" id="result-title"></h2>
+          <p class="result-score" id="result-score"></p>
+          <div class="result-body" id="result-body"></div>
+          <button type="button" class="btn btn--secondary" id="btn-retry">重新測驗</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>© 北捷眾生怪．獨樂樂不如眾怪怪</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
