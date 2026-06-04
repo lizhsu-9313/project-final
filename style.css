@@ -685,6 +685,14 @@ body {
 
 .result-buttons {
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(0.65rem, 3vw, 0.85rem);
+  width: 100%;
+}
+
+.result-buttons-row {
+  display: flex;
   flex-direction: row;
   align-items: stretch;
   justify-content: center;
@@ -692,12 +700,30 @@ body {
   width: 100%;
 }
 
-.result-buttons .btn {
-  flex: 1 1 0;
-  min-width: 0;
+.result-buttons .btn,
+.result-buttons-row .btn {
   border-radius: 100px;
   padding: 0.75rem 1rem;
   font-size: clamp(0.9rem, 2.8vw, 1rem);
+}
+
+.btn--copy-link {
+  width: 100%;
+  flex: none;
+  color: #fff;
+  background: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  box-shadow: var(--shadow-soft);
+}
+
+.btn--copy-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(41, 41, 41, 0.18);
+}
+
+.result-buttons-row .btn {
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .btn--ghost {
@@ -723,7 +749,8 @@ body {
 }
 
 .btn--ghost:focus-visible,
-.btn--result-retry:focus-visible {
+.btn--result-retry:focus-visible,
+.btn--copy-link:focus-visible {
   outline: 3px solid var(--color-primary);
   outline-offset: 3px;
 }

@@ -61,6 +61,7 @@
     optionsList: document.getElementById("options-list"),
     resultImage: document.getElementById("result-image"),
     btnShare: document.getElementById("btn-share"),
+    btnCopyLink: document.getElementById("btn-copy-link"),
     captureArea: document.getElementById("capture-area"),
     siteLogo: document.querySelector("#home-title"),
     captureLogo: document.querySelector(".capture-site-logo"),
@@ -295,10 +296,8 @@
   function shareResultCapture() {
     if (!els.captureArea) return;
     if (typeof html2canvas !== "function") return;
-
     if (els.btnShare) els.btnShare.disabled = true;
 
-    // 強制確保拍照前的容器背景在瀏覽器渲染中是完全透明的
     els.captureArea.style.backgroundColor = "transparent";
 
     waitForCaptureImages(els.captureArea).then(function () {
@@ -306,9 +305,36 @@
         backgroundColor: null,
         useCORS: true,
         allowTaint: true,
-        scale: 2,
         logging: false,
-        imageTimeout: 15000,
+        onclone: function (clonedDocument) {
+          var clonedArea = clonedDocument.getElementById("capture-area");
+          if (clonedArea) {
+            clonedArea.style.width = "800px";
+            clonedArea.style.height = "1548px";
+            clonedArea.style.maxWidth = "none";
+            clonedArea.style.boxSizing = "border-box";
+            clonedArea.style.display = "flex";
+            clonedArea.style.flexDirection = "column";
+            clonedArea.style.justifyContent = "space-between";
+            clonedArea.style.padding = "60px 40px";
+
+            clonedArea.style.backgroundImage =
+              window.getComputedStyle(
+                document.querySelector(".global-background")
+              ).backgroundImage || "url('image/background.jpg')";
+            clonedArea.style.backgroundSize = "cover";
+            clonedArea.style.backgroundPosition = "center center";
+            clonedArea.style.backgroundRepeat = "no-repeat";
+
+            var clonedLogo = clonedArea.querySelector(".capture-site-logo");
+            if (clonedLogo) clonedLogo.style.width = "450px";
+            var clonedImg = clonedArea.querySelector("#result-image");
+            if (clonedImg) {
+              clonedImg.style.width = "650px";
+              clonedImg.style.margin = "0 auto";
+            }
+          }
+        },
       });
     })
       .then(function (canvas) {
@@ -331,6 +357,40 @@
       .finally(function () {
         if (els.btnShare) els.btnShare.disabled = false;
       });
+  }
+
+  function copyPageLink() {
+    var url = window.location.href;
+
+    function onCopySuccess() {
+      window.alert("網頁連結已複製！快發給朋友一起測驗吧！");
+    }
+
+    function fallbackCopy() {
+      var textarea = document.createElement("textarea");
+      textarea.value = url;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        if (document.execCommand("copy")) onCopySuccess();
+        else window.alert("無法複製連結，請手動複製網址列。");
+      } catch (e) {
+        window.alert("無法複製連結，請手動複製網址列。");
+      }
+      document.body.removeChild(textarea);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard
+        .writeText(url)
+        .then(onCopySuccess)
+        .catch(fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
   }
 
   function showResult() {
@@ -373,6 +433,9 @@
   els.btnPrev.addEventListener("click", goToPreviousQuestion);
   if (els.btnShare) {
     els.btnShare.addEventListener("click", shareResultCapture);
+  }
+  if (els.btnCopyLink) {
+    els.btnCopyLink.addEventListener("click", copyPageLink);
   }
 
   resetAnswers();
