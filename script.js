@@ -32,32 +32,14 @@
     },
   ];
 
-  var RESULTS = {
-    high: {
-      tag: "結構分析型",
-      title: "結構分析型思維",
-      paragraphs: [
-        "你傾向用清楚的步驟與邏輯拆解問題，在壓力下仍能保持條理。決策時重視可驗證的依據，適合需要規劃與品質控管的任務。",
-        "建議：偶爾留白給創意與直覺，避免過度追求完美計畫而延誤行動。",
-      ],
-    },
-    mid: {
-      tag: "平衡整合型",
-      title: "平衡整合型思維",
-      paragraphs: [
-        "你能在秩序與彈性之間取得平衡，會參考規則與經驗，也能視情境調整做法。在團隊中常扮演務實的橋梁角色。",
-        "建議：重大決策時可再刻意區分「事實」與「感受」，讓判斷更全面。",
-      ],
-    },
-    low: {
-      tag: "直覺彈性型",
-      title: "直覺彈性型思維",
-      paragraphs: [
-        "你對氛圍與可能性敏感，擅長快速試錯與發想新路。在變動快的環境中能靈活應對，為團隊帶來新意。",
-        "建議：在期限緊迫時，可為自己設最小結構（例如三個檢查點），讓創意更穩妥落地。",
-      ],
-    },
+  /** 各分數區間對應的籤詩圖片（測試階段皆指向同一張） */
+  var RESULT_IMAGES = {
+    high: "images/包豬公.png",
+    mid: "images/包豬公.png",
+    low: "images/包豬公.png",
   };
+
+  var DOWNLOAD_FILENAME = "北捷眾生怪-我的測驗結果.png";
 
   var screens = {
     home: document.getElementById("screen-home"),
@@ -77,10 +59,8 @@
     questionIndex: document.getElementById("question-index"),
     questionText: document.getElementById("question-text"),
     optionsList: document.getElementById("options-list"),
-    resultTag: document.getElementById("result-tag"),
-    resultTitle: document.getElementById("result-title"),
-    resultScore: document.getElementById("result-score"),
-    resultBody: document.getElementById("result-body"),
+    resultImage: document.getElementById("result-image"),
+    btnShare: document.getElementById("btn-share"),
     siteLogo: document.querySelector(".site-logo"),
   };
 
@@ -265,24 +245,55 @@
     return "mid";
   }
 
+  function setResultImage(key) {
+    if (!els.resultImage) return;
+    var src = RESULT_IMAGES[key] || RESULT_IMAGES.mid;
+    els.resultImage.src = src;
+    els.resultImage.alt = "你的測驗結果籤詩";
+  }
+
+  function downloadResultImage() {
+    if (!els.resultImage) return;
+    var src = els.resultImage.currentSrc || els.resultImage.src;
+    if (!src) return;
+
+    fetch(src)
+      .then(function (response) {
+        if (!response.ok) throw new Error("fetch failed");
+        return response.blob();
+      })
+      .then(function (blob) {
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = DOWNLOAD_FILENAME;
+        link.rel = "noopener";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      })
+      .catch(function () {
+        var link = document.createElement("a");
+        link.href = src;
+        link.download = DOWNLOAD_FILENAME;
+        link.target = "_blank";
+        link.rel = "noopener";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+  }
+
   function showResult() {
     recalculateScore();
     var key = getResultKey(totalScore);
-    var data = RESULTS[key];
-
-    els.resultTag.textContent = data.tag;
-    els.resultTitle.textContent = data.title;
-    els.resultScore.textContent =
-      "你的總分為 " + totalScore + " 分（滿分 " + totalQuestions * 3 + " 分）";
-
-    els.resultBody.innerHTML = "";
-    data.paragraphs.forEach(function (text) {
-      var p = document.createElement("p");
-      p.textContent = text;
-      els.resultBody.appendChild(p);
-    });
+    setResultImage(key);
 
     transitionToScreen(screens.quiz, screens.result, function () {
+      window.requestAnimationFrame(function () {
+        playLogoSlideDownIn();
+      });
       els.btnRetry.focus();
     });
   }
@@ -312,6 +323,9 @@
   els.btnStart.addEventListener("click", startQuiz);
   els.btnRetry.addEventListener("click", restartQuiz);
   els.btnPrev.addEventListener("click", goToPreviousQuestion);
+  if (els.btnShare) {
+    els.btnShare.addEventListener("click", downloadResultImage);
+  }
 
   resetAnswers();
   setProgress();

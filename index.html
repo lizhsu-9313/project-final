@@ -64,13 +64,29 @@
       </section>
 
       <!-- 結果頁 -->
-      <section id="screen-result" class="screen" aria-labelledby="result-title">
-        <div class="card card--result">
-          <p class="result-tag" id="result-tag">結果</p>
-          <h2 class="title title--lg" id="result-title"></h2>
-          <p class="result-score" id="result-score"></p>
-          <div class="result-body" id="result-body"></div>
-          <button type="button" class="btn btn--secondary" id="btn-retry">重新測驗</button>
+      <section id="screen-result" class="screen" aria-label="測驗結果">
+        <div class="result-shell">
+          <div class="result-image-wrap">
+            <img
+              id="result-image"
+              src="images/包豬公.png"
+              alt="你的測驗結果籤詩"
+              decoding="async"
+            />
+          </div>
+          <div class="result-actions">
+            <div class="result-buttons" role="group" aria-label="結果操作">
+              <button type="button" class="btn btn--ghost" id="btn-share">
+                分享結果
+              </button>
+              <button type="button" class="btn btn--primary btn--result-retry" id="btn-retry">
+                再玩一次
+              </button>
+            </div>
+            <p class="result-download-hint">
+              提示：若無法下載，亦可長按圖片直接儲存籤詩喔！
+            </p>
+          </div>
         </div>
       </section>
     </main>
