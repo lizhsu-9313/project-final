@@ -298,15 +298,13 @@
 
     if (els.btnShare) els.btnShare.disabled = true;
 
-    var scale = Math.min(Math.max(window.devicePixelRatio || 1, 2), 3);
-
     waitForCaptureImages(els.captureArea).then(function () {
       return html2canvas(els.captureArea, {
-      scale: scale,
-      useCORS: true,
-      allowTaint: false,
-      backgroundColor: "#f7f7f7",
-      logging: false,
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true,
+        allowTaint: false,
+        logging: false,
         imageTimeout: 15000,
       });
     })
