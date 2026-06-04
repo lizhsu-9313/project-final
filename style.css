@@ -776,7 +776,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 80px 50px;
+  padding: 70px 50px 80px;
   background-image: url("image/background.jpg") !important;
   background-size: cover !important;
   background-position: center center !important;
@@ -790,12 +790,17 @@ body {
 }
 
 #hidden-photo-studio .studio-logo {
-  width: 450px;
+  width: 405px;
+  max-width: none;
+  display: block;
+  margin: -10px auto 0;
   flex-shrink: 0;
 }
 
 #hidden-photo-studio #studio-result-image {
-  width: 650px;
+  width: 715px;
+  max-width: none;
+  display: block;
   margin: 0 auto;
   flex-shrink: 0;
 }
