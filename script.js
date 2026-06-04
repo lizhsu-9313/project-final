@@ -61,7 +61,9 @@
     optionsList: document.getElementById("options-list"),
     resultImage: document.getElementById("result-image"),
     btnShare: document.getElementById("btn-share"),
-    siteLogo: document.querySelector(".site-logo"),
+    captureArea: document.getElementById("capture-area"),
+    siteLogo: document.querySelector("#home-title"),
+    captureLogo: document.querySelector(".capture-site-logo"),
   };
 
   var LOGO_SLIDE_DURATION_MS = 700;
@@ -89,26 +91,37 @@
     }
   }
 
-  function clearLogoSlideDownIn() {
-    if (els.siteLogo) {
-      els.siteLogo.classList.remove("slide-down-in");
+  function getActiveLogoEl() {
+    if (screens.result.classList.contains("screen--active") && els.captureLogo) {
+      return els.captureLogo;
     }
+    return els.siteLogo;
+  }
+
+  function clearLogoSlideDownIn() {
+    [els.siteLogo, els.captureLogo].forEach(function (logo) {
+      if (logo) logo.classList.remove("slide-down-in");
+    });
   }
 
   function playLogoSlideDownIn() {
-    if (!els.siteLogo) return;
+    var logo = getActiveLogoEl();
+    if (!logo) return;
     clearLogoSlideDownIn();
-    void els.siteLogo.offsetWidth;
-    els.siteLogo.classList.add("slide-down-in");
+    void logo.offsetWidth;
+    logo.classList.add("slide-down-in");
   }
 
-  if (els.siteLogo) {
-    els.siteLogo.addEventListener("animationend", function (e) {
-      if (e.animationName === "slide-down-in") {
-        clearLogoSlideDownIn();
-      }
-    });
-  }
+  document.addEventListener("animationend", function (e) {
+    if (
+      e.animationName === "slide-down-in" &&
+      e.target &&
+      (e.target.id === "home-title" ||
+        e.target.classList.contains("capture-site-logo"))
+    ) {
+      e.target.classList.remove("slide-down-in");
+    }
+  });
 
   function showScreen(name) {
     if (name === "home") {
@@ -252,36 +265,69 @@
     els.resultImage.alt = "你的測驗結果籤詩";
   }
 
-  function downloadResultImage() {
-    if (!els.resultImage) return;
-    var src = els.resultImage.currentSrc || els.resultImage.src;
-    if (!src) return;
+  function triggerPngDownload(blob) {
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    link.href = url;
+    link.download = DOWNLOAD_FILENAME;
+    link.rel = "noopener";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
 
-    fetch(src)
-      .then(function (response) {
-        if (!response.ok) throw new Error("fetch failed");
-        return response.blob();
+  function waitForCaptureImages(container) {
+    var imgs = container.querySelectorAll("img");
+    return Promise.all(
+      Array.prototype.map.call(imgs, function (img) {
+        if (img.complete && img.naturalWidth > 0) {
+          return Promise.resolve();
+        }
+        return new Promise(function (resolve) {
+          img.addEventListener("load", resolve, { once: true });
+          img.addEventListener("error", resolve, { once: true });
+        });
       })
-      .then(function (blob) {
-        var url = URL.createObjectURL(blob);
-        var link = document.createElement("a");
-        link.href = url;
-        link.download = DOWNLOAD_FILENAME;
-        link.rel = "noopener";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+    );
+  }
+
+  function shareResultCapture() {
+    if (!els.captureArea) return;
+    if (typeof html2canvas !== "function") return;
+
+    if (els.btnShare) els.btnShare.disabled = true;
+
+    var scale = Math.min(Math.max(window.devicePixelRatio || 1, 2), 3);
+
+    waitForCaptureImages(els.captureArea).then(function () {
+      return html2canvas(els.captureArea, {
+      scale: scale,
+      useCORS: true,
+      allowTaint: false,
+      backgroundColor: "#f7f7f7",
+      logging: false,
+        imageTimeout: 15000,
+      });
+    })
+      .then(function (canvas) {
+        return new Promise(function (resolve, reject) {
+          canvas.toBlob(
+            function (blob) {
+              if (blob) resolve(blob);
+              else reject(new Error("toBlob failed"));
+            },
+            "image/png",
+            1
+          );
+        });
       })
+      .then(triggerPngDownload)
       .catch(function () {
-        var link = document.createElement("a");
-        link.href = src;
-        link.download = DOWNLOAD_FILENAME;
-        link.target = "_blank";
-        link.rel = "noopener";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        window.alert("無法產生分享圖片，請稍後再試或長按籤詩圖片儲存。");
+      })
+      .finally(function () {
+        if (els.btnShare) els.btnShare.disabled = false;
       });
   }
 
@@ -324,7 +370,7 @@
   els.btnRetry.addEventListener("click", restartQuiz);
   els.btnPrev.addEventListener("click", goToPreviousQuestion);
   if (els.btnShare) {
-    els.btnShare.addEventListener("click", downloadResultImage);
+    els.btnShare.addEventListener("click", shareResultCapture);
   }
 
   resetAnswers();
