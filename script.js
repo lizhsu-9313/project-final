@@ -63,6 +63,8 @@
     btnShare: document.getElementById("btn-share"),
     btnCopyLink: document.getElementById("btn-copy-link"),
     captureArea: document.getElementById("capture-area"),
+    hiddenPhotoStudio: document.getElementById("hidden-photo-studio"),
+    studioResultImage: document.getElementById("studio-result-image"),
     siteLogo: document.querySelector("#home-title"),
     captureLogo: document.querySelector(".capture-site-logo"),
   };
@@ -260,10 +262,15 @@
   }
 
   function setResultImage(key) {
-    if (!els.resultImage) return;
     var src = RESULT_IMAGES[key] || RESULT_IMAGES.mid;
-    els.resultImage.src = src;
-    els.resultImage.alt = "你的測驗結果籤詩";
+    if (els.resultImage) {
+      els.resultImage.src = src;
+      els.resultImage.alt = "你的測驗結果籤詩";
+    }
+    if (els.studioResultImage) {
+      els.studioResultImage.src = src;
+      els.studioResultImage.alt = "你的測驗結果籤詩";
+    }
   }
 
   function triggerPngDownload(blob) {
@@ -294,47 +301,18 @@
   }
 
   function shareResultCapture() {
-    if (!els.captureArea) return;
+    var studio = document.getElementById("hidden-photo-studio");
+    if (!studio) return;
     if (typeof html2canvas !== "function") return;
     if (els.btnShare) els.btnShare.disabled = true;
 
-    els.captureArea.style.backgroundColor = "transparent";
-
-    waitForCaptureImages(els.captureArea).then(function () {
-      return html2canvas(els.captureArea, {
-        backgroundColor: null,
+    waitForCaptureImages(studio).then(function () {
+      return html2canvas(studio, {
+        width: 800,
+        height: 1548,
         useCORS: true,
         allowTaint: true,
         logging: false,
-        onclone: function (clonedDocument) {
-          var clonedArea = clonedDocument.getElementById("capture-area");
-          if (clonedArea) {
-            clonedArea.style.width = "800px";
-            clonedArea.style.height = "1548px";
-            clonedArea.style.maxWidth = "none";
-            clonedArea.style.boxSizing = "border-box";
-            clonedArea.style.display = "flex";
-            clonedArea.style.flexDirection = "column";
-            clonedArea.style.justifyContent = "space-between";
-            clonedArea.style.padding = "60px 40px";
-
-            clonedArea.style.backgroundImage =
-              window.getComputedStyle(
-                document.querySelector(".global-background")
-              ).backgroundImage || "url('image/background.jpg')";
-            clonedArea.style.backgroundSize = "cover";
-            clonedArea.style.backgroundPosition = "center center";
-            clonedArea.style.backgroundRepeat = "no-repeat";
-
-            var clonedLogo = clonedArea.querySelector(".capture-site-logo");
-            if (clonedLogo) clonedLogo.style.width = "450px";
-            var clonedImg = clonedArea.querySelector("#result-image");
-            if (clonedImg) {
-              clonedImg.style.width = "650px";
-              clonedImg.style.margin = "0 auto";
-            }
-          }
-        },
       });
     })
       .then(function (canvas) {

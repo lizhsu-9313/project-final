@@ -764,6 +764,54 @@ body {
   letter-spacing: 0.02em;
 }
 
+/* 隱形固定攝影棚：800×1548 導出海報（移出螢幕，不可 display:none） */
+#hidden-photo-studio {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  width: 800px !important;
+  height: 1548px !important;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 80px 50px;
+  background-image: url("image/background.jpg") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  overflow: hidden;
+}
+
+#hidden-photo-studio img {
+  max-width: 100%;
+  height: auto;
+}
+
+#hidden-photo-studio .studio-logo {
+  width: 450px;
+  flex-shrink: 0;
+}
+
+#hidden-photo-studio #studio-result-image {
+  width: 650px;
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+
+#hidden-photo-studio .studio-footer {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: 22px;
+  line-height: 1.4;
+  color: #5c5c5c;
+  text-align: center;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
 @media (min-width: 900px) {
   .main {
     max-width: 620px;
