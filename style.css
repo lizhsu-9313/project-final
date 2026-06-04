@@ -604,12 +604,17 @@ body {
   padding: 0 clamp(0.75rem, 4vw, 1.25rem) clamp(1.5rem, 5vw, 2.5rem);
 }
 
+.capture-area {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
 #capture-area,
-.capture-area,
 #capture-area .capture-logo,
 #capture-area .result-image-wrap,
 #capture-area .capture-footer {
   background: transparent;
+  background-color: transparent;
 }
 
 #capture-area {

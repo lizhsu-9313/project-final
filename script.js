@@ -34,9 +34,9 @@
 
   /** 各分數區間對應的籤詩圖片（測試階段皆指向同一張） */
   var RESULT_IMAGES = {
-    high: "images/包豬公.png",
-    mid: "images/包豬公.png",
-    low: "images/包豬公.png",
+    high: "image/包豬公.png",
+    mid: "image/包豬公.png",
+    low: "image/包豬公.png",
   };
 
   var DOWNLOAD_FILENAME = "北捷眾生怪-我的測驗結果.png";
@@ -298,12 +298,15 @@
 
     if (els.btnShare) els.btnShare.disabled = true;
 
+    // 強制確保拍照前的容器背景在瀏覽器渲染中是完全透明的
+    els.captureArea.style.backgroundColor = "transparent";
+
     waitForCaptureImages(els.captureArea).then(function () {
       return html2canvas(els.captureArea, {
         backgroundColor: null,
-        scale: 2,
         useCORS: true,
-        allowTaint: false,
+        allowTaint: true,
+        scale: 2,
         logging: false,
         imageTimeout: 15000,
       });
@@ -321,7 +324,8 @@
         });
       })
       .then(triggerPngDownload)
-      .catch(function () {
+      .catch(function (err) {
+        console.error(err);
         window.alert("無法產生分享圖片，請稍後再試或長按籤詩圖片儲存。");
       })
       .finally(function () {
