@@ -16,6 +16,8 @@
   --shadow-soft: 0 8px 24px rgba(41, 41, 41, 0.04);
   --transition: 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   --max-width: 560px;
+  --layout-max-tablet: 700px;
+  --layout-gutter-mobile: clamp(20px, 5.5vw, 24px);
   --bg-image: url("image/background.jpg");
   --card-bg: rgba(255, 255, 255, 0.6);
   --card-border: rgba(255, 255, 255, 0.5);
@@ -49,10 +51,12 @@ body {
 /* 全站公用背景：固定於視窗，切頁時不變動、不縮放 */
 .global-background {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
+  width: 100%;
+  min-width: 100vw;
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
   z-index: -1;
   margin: 0;
   padding: 0;
@@ -795,6 +799,194 @@ body {
   letter-spacing: 0.02em;
 }
 
+/* ============================================
+   RWD · iPhone（< 768px）與 iPad Air 4（≥ 768px）
+   ※ 不影響 #hidden-photo-studio
+   ============================================ */
+
+@media (max-width: 767px) {
+  html,
+  body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  .app {
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: var(--layout-gutter-mobile);
+    padding-right: var(--layout-gutter-mobile);
+    padding-top: clamp(1rem, 4vw, 1.5rem);
+    padding-bottom: clamp(1.25rem, 5vw, 2rem);
+  }
+
+  .main,
+  .screen,
+  .result-shell,
+  .quiz-shell {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .main:has(#screen-home.screen--active) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .title--md {
+    font-size: clamp(1.25rem, 5.2vw, 1.5rem);
+    line-height: 1.45;
+  }
+
+  .title--lg {
+    font-size: clamp(1.25rem, 5.5vw, 1.5rem);
+  }
+
+  .home-intro__text,
+  .card .home-intro__text,
+  body {
+    font-size: 1rem;
+  }
+
+  .option-btn {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  #capture-area,
+  #result-image {
+    width: 100%;
+    max-width: 390px;
+  }
+
+  .result-actions {
+    max-width: 390px;
+  }
+
+  .capture-site-logo {
+    width: min(68vw, 200px);
+    max-width: 200px;
+  }
+
+  .result-shell {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .app {
+    max-width: var(--layout-max-tablet);
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    padding: clamp(1.5rem, 3vw, 2rem) clamp(1.25rem, 3vw, 1.75rem)
+      clamp(1.75rem, 4vw, 2.5rem);
+    border-radius: var(--radius-lg);
+    box-shadow:
+      0 24px 64px rgba(41, 41, 41, 0.16),
+      0 8px 28px rgba(41, 41, 41, 0.1);
+  }
+
+  .main,
+  .screen,
+  .result-shell,
+  .quiz-shell {
+    max-width: var(--layout-max-tablet);
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+
+  /* 首頁與題目頁：LOGO、副標放大 15% */
+  .app:has(#screen-home.screen--active) .site-subtitle {
+    width: min(calc(58vw * 0.98), calc(48vmin * 0.98), 469px);
+    max-height: 18.4vh;
+  }
+
+  .app:has(#screen-home.screen--active) .brand-logo .site-logo {
+    width: min(88vw, calc(72vmin * 1.265), 828px);
+    max-height: 36.8vh;
+  }
+
+  .app:has(#screen-quiz.screen--active) .brand-logo .site-logo {
+    width: min(68vw, 230px);
+    max-width: 230px;
+  }
+
+  .capture-site-logo {
+    width: min(68vw, 230px);
+    max-width: 230px;
+  }
+
+  /* 題目卡片與選項：字體、內距放大 10% */
+  .card--question {
+    padding: clamp(1.93rem, 5.5vw, 3.03rem);
+  }
+
+  .card--question .title--md {
+    font-size: clamp(1.265rem, 4.2vw, 1.485rem);
+    line-height: 1.45;
+  }
+
+  .card--question .question-index {
+    font-size: 0.88rem;
+  }
+
+  .card--question .options {
+    gap: 0.825rem;
+    margin-top: 1.93rem;
+  }
+
+  .card--question .option-btn {
+    padding: 1.2375rem 1.925rem;
+    font-size: 1.045rem;
+    line-height: 1.5;
+  }
+
+  /* 結果頁：籤詩圖 500px；按鈕比例協調 */
+  #capture-area,
+  #result-image {
+    max-width: 500px;
+  }
+
+  #result-image {
+    width: 500px;
+  }
+
+  .result-actions {
+    max-width: 560px;
+  }
+
+  .btn--copy-link {
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .result-buttons-row {
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .result-buttons-row .btn {
+    flex: 1 1 auto;
+    max-width: 220px;
+  }
+
+  .home-intro {
+    max-width: 100%;
+  }
+
+  .home-intro__text {
+    font-size: 1.05rem;
+  }
+}
+
 /* 隱形固定攝影棚：800×1548 導出海報（移出螢幕，不可 display:none） */
 #hidden-photo-studio {
   position: absolute;
@@ -846,12 +1038,6 @@ body {
   text-align: center;
   letter-spacing: 0.02em;
   flex-shrink: 0;
-}
-
-@media (min-width: 900px) {
-  .main {
-    max-width: 620px;
-  }
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
