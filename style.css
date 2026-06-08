@@ -159,53 +159,53 @@ body {
   animation: slide-down-in 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
-/* 首頁：副標在 logo 正上方，整組與各圖皆置於畫面正中央 */
+/* 首頁：由上而下流式排版（LOGO → 介紹 → 按鈕） */
+.app:has(#screen-home.screen--active) {
+  justify-content: flex-start;
+  gap: clamp(0.75rem, 2.5vh, 1.25rem);
+  overflow-y: auto;
+}
+
 .app:has(#screen-home.screen--active) .brand-logo {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  right: auto;
-  bottom: auto;
-  transform: translate(-50%, -50%);
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
   gap: clamp(0.35rem, 1.5vh, 0.75rem);
-  width: min(95vw, calc(78vmin * 1.15), 828px);
-  max-height: 88vh;
-  margin: 0;
-  padding: 0 clamp(0.5rem, 3vw, 1rem);
+  width: 100%;
+  max-width: calc(var(--max-width) + 3rem);
+  max-height: none;
+  margin: 0 auto;
+  padding: clamp(0.5rem, 2vh, 1rem) clamp(0.5rem, 3vw, 1rem) 0;
   pointer-events: none;
+  flex-shrink: 0;
 }
 
 .app:has(#screen-home.screen--active) .site-subtitle {
   display: block;
   width: min(calc(58vw * 0.85), calc(48vmin * 0.85), 408px);
   max-width: 100%;
-  max-height: 18.7vh;
+  max-height: 16vh;
   align-self: center;
   flex-shrink: 0;
 }
 
 .app:has(#screen-home.screen--active) .brand-logo .site-logo {
-  width: min(95vw, calc(78vmin * 1.15), 828px);
+  width: min(88vw, calc(72vmin * 1.1), 720px);
   max-width: 100%;
-  max-height: 42vh;
+  max-height: 32vh;
   align-self: center;
   flex-shrink: 1;
 }
 
 .home-intro {
-  display: none;
-}
-
-.app:has(#screen-home.screen--active) .home-intro {
-  display: block;
-  pointer-events: auto;
-  width: min(92vw, var(--max-width));
-  max-width: 100%;
-  margin-top: clamp(0.5rem, 2vh, 0.85rem);
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
   padding: clamp(1.1rem, 4vw, 1.5rem);
   flex-shrink: 0;
 }
@@ -232,8 +232,11 @@ body {
 }
 
 .main:has(#screen-home.screen--active) {
-  justify-content: stretch;
+  flex: 1 1 auto;
+  justify-content: flex-end;
   min-height: 0;
+  width: 100%;
+  padding: 0 clamp(0.75rem, 4vw, 1.25rem);
 }
 
 .app:has(#screen-result.screen--active) {
@@ -279,18 +282,22 @@ body {
   transform: translateY(0);
 }
 
-/* 首頁：無白底卡片，按鈕置於畫面中下方 */
+/* 首頁：介紹文字與按鈕垂直排列 */
 #screen-home.screen--active {
   display: flex;
   flex: 1;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  min-height: 100%;
-  padding-bottom: clamp(0.5rem, 2vh, 0.75rem);
+  gap: clamp(1rem, 3vh, 1.5rem);
+  width: 100%;
+  min-height: 0;
+  padding-bottom: clamp(0.25rem, 1.5vh, 0.5rem);
 }
 
 .app:has(#screen-home.screen--active) .footer {
+  flex-shrink: 0;
+  margin-top: 0;
   padding-top: clamp(0.5rem, 2vw, 0.75rem);
 }
 
@@ -298,7 +305,7 @@ body {
   display: flex;
   justify-content: center;
   width: 100%;
-  padding: 0 clamp(0.75rem, 4vw, 1.25rem);
+  flex-shrink: 0;
 }
 
 .screen.is-leaving {
