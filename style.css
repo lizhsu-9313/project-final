@@ -173,7 +173,7 @@ body {
   text-align: center;
   gap: clamp(0.35rem, 1.5vh, 0.75rem);
   width: min(95vw, calc(78vmin * 1.15), 828px);
-  max-height: 75vh;
+  max-height: 88vh;
   margin: 0;
   padding: 0 clamp(0.5rem, 3vw, 1rem);
   pointer-events: none;
@@ -191,9 +191,32 @@ body {
 .app:has(#screen-home.screen--active) .brand-logo .site-logo {
   width: min(95vw, calc(78vmin * 1.15), 828px);
   max-width: 100%;
-  max-height: 55.2vh;
+  max-height: 42vh;
   align-self: center;
   flex-shrink: 1;
+}
+
+.home-intro {
+  display: none;
+}
+
+.app:has(#screen-home.screen--active) .home-intro {
+  display: block;
+  pointer-events: auto;
+  width: min(92vw, var(--max-width));
+  max-width: 100%;
+  margin-top: clamp(0.5rem, 2vh, 0.85rem);
+  padding: clamp(1.1rem, 4vw, 1.5rem);
+  flex-shrink: 0;
+}
+
+.home-intro__text {
+  margin: 0;
+  font-size: clamp(0.9rem, 2.8vw, 1rem);
+  line-height: 1.65;
+  color: var(--color-text);
+  text-align: left;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.65);
 }
 
 .main {
@@ -302,7 +325,8 @@ body {
 .card .title,
 .card .lead,
 .card .muted,
-.card .question-index {
+.card .question-index,
+.card .home-intro__text {
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.65);
 }
 
