@@ -51,12 +51,10 @@ body {
 /* 全站公用背景：固定於視窗，切頁時不變動、不縮放 */
 .global-background {
   position: fixed;
-  inset: 0;
-  width: 100%;
-  min-width: 100vw;
-  height: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: -1;
   margin: 0;
   padding: 0;
