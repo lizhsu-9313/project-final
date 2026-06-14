@@ -1,43 +1,100 @@
 (function () {
   "use strict";
 
-  /** 每題選項含分數：總分愈高愈偏「分析／結構型」，愈低愈偏「直覺／彈性型」 */
   var QUESTIONS = [
     {
       id: 1,
-      text: "面對截止期限將至，你通常會？",
+      text: "早上八點，你拖著疲憊的身軀衝進車廂，車門關閉的瞬間，你發現整個車廂只剩下一個空位。\n\n這時你會看到……",
       options: [
-        { label: "列出步驟與時間表，依序完成", score: 3 },
-        { label: "先處理最棘手的部分，再補細節", score: 2 },
-        { label: "依當下靈感先做，再視情況調整", score: 1 },
+        { label: "把包包直接放在空位的乘客，嘴裡說著：『寶包你經歷風吹日曬雨淋，你值得坐下休息🥺』", weights: { "包豬公": 0.4, "獅咪罵誰": 0.3, "狐臭非為": 0.3 } },
+        { label: "眼神有點詭異的老人，看你沒有要坐，立馬飛奔到其空位，快速到像玩大風吹。", weights: { "獅咪罵誰": 0.6, "門心自ven": 0.2, "雞雞喳喳": 0.2 } },
+        { label: "直接放棄座位的肌肉怪，用大腿出力像腳下有查克拉。", weights: { "石巴拉西": 0.7, "獅咪罵誰": 0.15, "門心自ven": 0.15 } },
+        { label: "站在門口和朋友聊了十五站後都不坐下的乘客。", weights: { "門心自ven": 0.7, "包豬公": 0.15, "雞雞喳喳": 0.15 } },
       ],
     },
     {
       id: 2,
-      text: "做重要決定時，你較依賴？",
+      text: "列車行駛到台北車站，突然湧進一大群乘客，而今天剛好是36度的超級高溫，你感覺空氣開始變得黏稠，車廂彷彿變成一鍋快要爆炸的壓力鍋。\n\n此時你覺得旁邊會是…",
       options: [
-        { label: "數據、規則與可驗證的資訊", score: 3 },
-        { label: "既有經驗與他人建議的綜合判斷", score: 2 },
-        { label: "直覺與整體氛圍的感受", score: 1 },
+        { label: "把包包往外擴張半公尺，將腳翹到101大樓那樣高的怪。", weights: { "包豬公": 0.6, "門心自ven": 0.2, "狐臭非為": 0.2 } },
+        { label: "雙手各抓一根扶手，就算人再多也不放棄二頭肌還能發力。", weights: { "石巴拉西": 0.7, "雞雞喳喳": 0.15, "獅咪罵誰": 0.15 } },
+        { label: "嘴裡大喊著：『都這麼熱了為什麼不放點音樂嗨起來！』的宿醉乘客。", weights: { "雞雞喳喳": 0.8, "獅咪罵誰": 0.2 } },
+        { label: "站在門口不說話，低頭滑手機靠著欄杆的乘客。", weights: { "門心自ven": 0.7, "包豬公": 0.15, "獅咪罵誰": 0.15 } },
       ],
     },
     {
       id: 3,
-      text: "在團隊討論中，你較常？",
+      text: "就在這時，車廂突然停電，全車暗到不行時\n\n你會聽到……",
       options: [
-        { label: "整理共識並提出可行方案", score: 3 },
-        { label: "居中協調不同意見", score: 2 },
-        { label: "提出新角度或跳脫框架的想法", score: 1 },
+        { label: "昨天在IG Reels 滑到的超可愛貓貓迷因音樂。", weights: { "雞雞喳喳": 0.7, "狐臭非為": 0.15, "包豬公": 0.15 } },
+        { label: "窸窸窣窣的辯論比賽。", weights: { "獅咪罵誰": 0.7, "雞雞喳喳": 0.3 } },
+        { label: "捷運把手ㄍㄧㄍㄧㄍㄨㄞㄍㄨㄞ的奇怪聲音。", weights: { "石巴拉西": 0.7, "門心自ven": 0.3 } },
+        { label: "從門口穿來的嘻笑打鬧聲。", weights: { "門心自ven": 0.8, "包豬公": 0.2 } },
+      ],
+    },
+    {
+      id: 4,
+      text: "終於…列車啟動了，但不知道怎麼了，這班車特別的怪，剛啟動沒多久立馬又來個急剎，全車乘客像保齡球瓶一樣向前傾倒。\n\n這時，你覺得你會第一眼看到？",
+      options: [
+        { label: "利用門口前的欄杆完成了一場超高難度的鋼管舞的乘客。", weights: { "門心自ven": 0.8, "獅咪罵誰": 0.2 } },
+        { label: "乘客不小心摔倒後，竟然還幫忙配了罐頭笑聲的手機。", weights: { "雞雞喳喳": 0.8, "狐臭非為": 0.2 } },
+        { label: "利用慣性完成一次引體向上的乘客。", weights: { "石巴拉西": 0.8, "雞雞喳喳": 0.2 } },
+        { label: "大哭著說：『人沒了可以再投胎，包包摔到很麻煩欸！』的乘客", weights: { "包豬公": 0.7, "狐臭非為": 0.15, "門心自ven": 0.15 } },
+      ],
+    },
+    {
+      id: 5,
+      text: "此時你真的覺得快受不了了，這班車已經讓你感官過載，撐不下去了！你覺得哪個部分最想讓你下車。",
+      options: [
+        { label: "一股神秘的濃烈氣味，像梅雨季永遠曬不乾的襪子，或是你死都不肯吃的孜然味。", weights: { "狐臭非為": 1.0 } },
+        { label: "一直在做肩頸伸展不斷碰到你的乘客", weights: { "石巴拉西": 0.5, "狐臭非為": 0.5 } },
+        { label: "像菜市場一樣此起彼落的吵鬧聲。", weights: { "雞雞喳喳": 0.6, "獅咪罵誰": 0.4 } },
+        { label: "看你暈車到不行，但只是直勾勾盯著你的乘客。", weights: { "獅咪罵誰": 0.7, "門心自ven": 0.3 } },
+      ],
+    },
+    {
+      id: 6,
+      text: "你終於撐到轉乘站。\n\n就在車門打開的瞬間，你發現眼前的人潮根本不是乘客，而是《屍速列車》大型沉浸式體驗活動。\n\n你決定跟著人群一起往外衝。\n\n結果前面突然出現……",
+      options: [
+        { label: "站在門正中央眼神十分空洞的乘客，他彷彿在思考人生、宇宙與量子力學，這位乘客的狀態彷彿也像薛丁格的貓一樣，要等車門開了才能知道。", weights: { "門心自ven": 0.8, "包豬公": 0.2 } },
+        { label: "一邊衝一邊大喊：『年輕人腿不是很好嗎跑那麼慢？』的阿公。", weights: { "獅咪罵誰": 0.8, "石巴拉西": 0.2 } },
+        { label: "左右手各勾一個扶手，用核心肌群抵抗人流的人。", weights: { "石巴拉西": 0.8, "門心自ven": 0.2 } },
+        { label: "背著超巨大後背包轉身時直接把三個人掃回月台。", weights: { "包豬公": 0.7, "狐臭非為": 0.3 } },
+      ],
+    },
+    {
+      id: 7,
+      text: "在你下車之後…你發現這時月台廣播突然宣布：本列車即將進行「北捷神人挑戰賽」。請所有乘客展現自己的專長，你認為第一名會是……",
+      options: [
+        { label: "用手機外放完整追完兩集連續劇的人。", weights: { "雞雞喳喳": 0.8, "門心自ven": 0.2 } },
+        { label: "在捷運裡完成一場CrossFit比賽的乘客。", weights: { "石巴拉西": 0.9, "獅咪罵誰": 0.1 } },
+        { label: "把禮義廉恥四維八德變成rap在唱的乘客", weights: { "包豬公": 0.9, "狐臭非為": 0.1 } },
+        { label: "不管到哪裡總能精準找到座位的乘客。", weights: { "獅咪罵誰": 0.8, "包豬公": 0.2 } },
+      ],
+    },
+    {
+      id: 8,
+      text: "在經歷了這麼多詭異的事後，你終於刷卡出站，突然，眼前閃過一道金光，有一個北捷之神從天而降，對你說：『孩子，你已完成試煉，現在我將保佑你再也不遇到某種乘客。』\n\n你會選…",
+      options: [
+        { label: "最喜歡讓包包當左右護法的乘客。", weights: { "包豬公": 1.0 } },
+        { label: "『全世界都是我的健身房！連捷運也不放過』的奇怪乘客", weights: { "石巴拉西": 1.0 } },
+        { label: "手機永遠聽不到聲音，甚至想接音響，但就是不戴耳機的乘客。", weights: { "雞雞喳喳": 1.0 } },
+        { label: "你永遠找不到在哪裡，但他的氣息永遠都在的乘客。", weights: { "狐臭非為": 1.0 } },
+        { label: "總是待在車門邊，喜靜不喜動的門神乘客。", weights: { "門心自ven": 1.0 } },
+        { label: "把『年輕人現在到底怎麼了？』當起手式的找碴乘客。", weights: { "獅咪罵誰": 1.0 } },
       ],
     },
   ];
 
-  /** 各分數區間對應的籤詩圖片（測試階段皆指向同一張） */
-  var RESULT_IMAGES = {
-    high: "image/包豬公.png",
-    mid: "image/包豬公.png",
-    low: "image/包豬公.png",
-  };
+  /** 角色順序：平手時取陣列中較前者 */
+  var CHARACTER_ORDER = [
+    "包豬公",
+    "獅咪罵誰",
+    "狐臭非為",
+    "石巴拉西",
+    "門心自ven",
+    "雞雞喳喳",
+  ];
 
   var DOWNLOAD_FILENAME = "北捷眾生怪-我的測驗結果.png";
 
@@ -69,14 +126,22 @@
     captureLogo: document.querySelector(".capture-site-logo"),
   };
 
-  var LOGO_SLIDE_DURATION_MS = 700;
   var totalQuestions = QUESTIONS.length;
   var currentIndex = 0;
-  var totalScore = 0;
-  /** 每題已選分數；null 表示尚未作答，重新選擇會覆蓋 */
+  var characterScores = createEmptyScoreboard();
+  var winningCharacter = CHARACTER_ORDER[0];
+  /** 每題已選 weights 物件；null 表示尚未作答 */
   var answers = [];
   var swapTimer = null;
   var advanceTimer = null;
+
+  function createEmptyScoreboard() {
+    var board = {};
+    CHARACTER_ORDER.forEach(function (name) {
+      board[name] = 0;
+    });
+    return board;
+  }
 
   function resetAnswers() {
     answers = new Array(totalQuestions);
@@ -85,13 +150,46 @@
     }
   }
 
+  function weightsEqual(a, b) {
+    if (!a || !b) return false;
+    var keysA = Object.keys(a);
+    for (var i = 0; i < keysA.length; i++) {
+      var key = keysA[i];
+      if (a[key] !== b[key]) return false;
+    }
+    var keysB = Object.keys(b);
+    if (keysA.length !== keysB.length) return false;
+    return true;
+  }
+
   function recalculateScore() {
-    totalScore = 0;
+    characterScores = createEmptyScoreboard();
     for (var i = 0; i < answers.length; i++) {
-      if (answers[i] !== null) {
-        totalScore += answers[i];
+      var weights = answers[i];
+      if (!weights) continue;
+      Object.keys(weights).forEach(function (character) {
+        if (characterScores[character] !== undefined) {
+          characterScores[character] += weights[character];
+        }
+      });
+    }
+  }
+
+  function getWinningCharacter() {
+    var winner = CHARACTER_ORDER[0];
+    var maxScore = characterScores[winner];
+    for (var i = 1; i < CHARACTER_ORDER.length; i++) {
+      var name = CHARACTER_ORDER[i];
+      if (characterScores[name] > maxScore) {
+        maxScore = characterScores[name];
+        winner = name;
       }
     }
+    return winner;
+  }
+
+  function getResultImagePath(character) {
+    return "image/" + character + ".png";
   }
 
   function getActiveLogoEl() {
@@ -170,7 +268,7 @@
 
   function renderQuestion() {
     var q = QUESTIONS[currentIndex];
-    var savedScore = answers[currentIndex];
+    var savedWeights = answers[currentIndex];
 
     els.questionIndex.textContent = "題目 " + q.id;
     els.questionText.textContent = q.text;
@@ -181,13 +279,12 @@
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "option-btn";
-      if (savedScore !== null && opt.score === savedScore) {
+      if (savedWeights !== null && weightsEqual(savedWeights, opt.weights)) {
         btn.classList.add("is-selected");
       }
       btn.textContent = opt.label;
-      btn.setAttribute("data-score", String(opt.score));
       btn.addEventListener("click", function () {
-        onOptionClick(btn, opt.score);
+        onOptionClick(btn, opt.weights);
       });
       li.appendChild(btn);
       els.optionsList.appendChild(li);
@@ -211,7 +308,7 @@
     }, 220);
   }
 
-  function onOptionClick(btn, score) {
+  function onOptionClick(btn, weights) {
     if (advanceTimer) {
       window.clearTimeout(advanceTimer);
       advanceTimer = null;
@@ -223,7 +320,7 @@
     });
     btn.classList.add("is-selected");
 
-    answers[currentIndex] = score;
+    answers[currentIndex] = weights;
     recalculateScore();
 
     advanceTimer = window.setTimeout(function () {
@@ -252,24 +349,16 @@
     });
   }
 
-  function getResultKey(score) {
-    var max = totalQuestions * 3;
-    var min = totalQuestions * 1;
-    var mid = (max + min) / 2;
-    if (score >= mid + 1) return "high";
-    if (score <= mid - 1) return "low";
-    return "mid";
-  }
-
-  function setResultImage(key) {
-    var src = RESULT_IMAGES[key] || RESULT_IMAGES.mid;
+  function setResultImage(character) {
+    var src = getResultImagePath(character);
+    var alt = "你的測驗結果籤詩 — " + character;
     if (els.resultImage) {
       els.resultImage.src = src;
-      els.resultImage.alt = "你的測驗結果籤詩";
+      els.resultImage.alt = alt;
     }
     if (els.studioResultImage) {
       els.studioResultImage.src = src;
-      els.studioResultImage.alt = "你的測驗結果籤詩";
+      els.studioResultImage.alt = alt;
     }
   }
 
@@ -373,8 +462,8 @@
 
   function showResult() {
     recalculateScore();
-    var key = getResultKey(totalScore);
-    setResultImage(key);
+    winningCharacter = getWinningCharacter();
+    setResultImage(winningCharacter);
 
     transitionToScreen(screens.quiz, screens.result, function () {
       window.requestAnimationFrame(function () {
@@ -386,7 +475,8 @@
 
   function startQuiz() {
     currentIndex = 0;
-    totalScore = 0;
+    characterScores = createEmptyScoreboard();
+    winningCharacter = CHARACTER_ORDER[0];
     resetAnswers();
     renderQuestion();
     transitionToScreen(screens.home, screens.quiz, function () {
@@ -400,7 +490,8 @@
 
   function restartQuiz() {
     currentIndex = 0;
-    totalScore = 0;
+    characterScores = createEmptyScoreboard();
+    winningCharacter = CHARACTER_ORDER[0];
     resetAnswers();
     renderQuestion();
     transitionToScreen(screens.result, screens.quiz, null);
