@@ -120,6 +120,9 @@
     btnShare: document.getElementById("btn-share"),
     btnCopyLink: document.getElementById("btn-copy-link"),
     captureArea: document.getElementById("capture-area"),
+    drawHand: document.getElementById("draw-hand"),
+    fortunePot: document.getElementById("fortune-pot"),
+    resultActions: document.querySelector("#screen-result .result-actions"),
     hiddenPhotoStudio: document.getElementById("hidden-photo-studio"),
     studioResultImage: document.getElementById("studio-result-image"),
     siteLogo: document.querySelector("#home-title"),
@@ -134,6 +137,130 @@
   var answers = [];
   var swapTimer = null;
   var advanceTimer = null;
+  var DRAW_PULL_THRESHOLD = 200;
+  var drawState = {
+    active: false,
+    startPointerY: 0,
+    pullDistance: 0,
+    completed: false,
+    pointerId: null,
+  };
+
+  function resetDrawInteraction() {
+    drawState.active = false;
+    drawState.pullDistance = 0;
+    drawState.completed = false;
+    drawState.pointerId = null;
+    screens.result.classList.remove("is-revealed");
+
+    if (els.captureArea) {
+      els.captureArea.classList.remove("draw-complete", "is-dragging");
+      els.captureArea.classList.add("draw-pending");
+      els.captureArea.style.transform = "";
+    }
+    if (els.drawHand) {
+      els.drawHand.classList.remove("fade-out", "is-dragging");
+      els.drawHand.style.transform = "";
+      els.drawHand.style.visibility = "";
+    }
+    if (els.fortunePot) {
+      els.fortunePot.classList.remove("fade-out");
+      els.fortunePot.style.visibility = "";
+    }
+    if (els.resultActions) {
+      els.resultActions.classList.add("hidden-actions");
+      els.resultActions.classList.remove("show");
+    }
+  }
+
+  function applyDrawPull(pullPx) {
+    var offset = -pullPx;
+    if (els.drawHand) {
+      els.drawHand.style.transform = "translateY(" + offset + "px)";
+    }
+    if (els.captureArea) {
+      els.captureArea.style.transform =
+        "translateY(calc(55vh + " + offset + "px))";
+    }
+  }
+
+  function completeDrawInteraction() {
+    if (drawState.completed) return;
+    drawState.completed = true;
+    drawState.active = false;
+
+    if (els.captureArea) {
+      els.captureArea.classList.remove("is-dragging", "draw-pending");
+      els.captureArea.classList.add("draw-complete");
+      els.captureArea.style.transform = "";
+    }
+    if (els.drawHand) {
+      els.drawHand.classList.remove("is-dragging");
+      els.drawHand.classList.add("fade-out");
+    }
+    if (els.fortunePot) {
+      els.fortunePot.classList.add("fade-out");
+    }
+
+    screens.result.classList.add("is-revealed");
+
+    window.setTimeout(function () {
+      if (els.drawHand) els.drawHand.style.visibility = "hidden";
+      if (els.fortunePot) els.fortunePot.style.visibility = "hidden";
+      if (els.resultActions) els.resultActions.classList.add("show");
+      window.requestAnimationFrame(function () {
+        playLogoSlideDownIn();
+      });
+      if (els.btnRetry) els.btnRetry.focus();
+    }, 500);
+  }
+
+  function onDrawPointerDown(e) {
+    if (drawState.completed || !els.drawHand) return;
+    drawState.pointerId = e.pointerId;
+    els.drawHand.setPointerCapture(e.pointerId);
+    drawState.active = true;
+    drawState.startPointerY = e.clientY;
+    if (els.captureArea) els.captureArea.classList.add("is-dragging");
+    els.drawHand.classList.add("is-dragging");
+    e.preventDefault();
+  }
+
+  function onDrawPointerMove(e) {
+    if (!drawState.active || drawState.completed) return;
+    if (e.pointerId !== drawState.pointerId) return;
+    var pull = drawState.startPointerY - e.clientY;
+    if (pull < 0) pull = 0;
+    drawState.pullDistance = pull;
+    applyDrawPull(pull);
+    if (pull >= DRAW_PULL_THRESHOLD) {
+      completeDrawInteraction();
+    }
+  }
+
+  function onDrawPointerUp(e) {
+    if (e.pointerId !== drawState.pointerId) return;
+    try {
+      els.drawHand.releasePointerCapture(e.pointerId);
+    } catch (err) {
+      /* noop */
+    }
+    drawState.active = false;
+    drawState.pointerId = null;
+    if (drawState.completed) return;
+    if (els.captureArea) els.captureArea.classList.remove("is-dragging");
+    els.drawHand.classList.remove("is-dragging");
+    drawState.pullDistance = 0;
+    applyDrawPull(0);
+  }
+
+  function initDrawInteraction() {
+    if (!els.drawHand) return;
+    els.drawHand.addEventListener("pointerdown", onDrawPointerDown);
+    els.drawHand.addEventListener("pointermove", onDrawPointerMove);
+    els.drawHand.addEventListener("pointerup", onDrawPointerUp);
+    els.drawHand.addEventListener("pointercancel", onDrawPointerUp);
+  }
 
   function createEmptyScoreboard() {
     var board = {};
@@ -464,13 +591,9 @@
     recalculateScore();
     winningCharacter = getWinningCharacter();
     setResultImage(winningCharacter);
+    resetDrawInteraction();
 
-    transitionToScreen(screens.quiz, screens.result, function () {
-      window.requestAnimationFrame(function () {
-        playLogoSlideDownIn();
-      });
-      els.btnRetry.focus();
-    });
+    transitionToScreen(screens.quiz, screens.result, null);
   }
 
   function startQuiz() {
@@ -492,6 +615,7 @@
     currentIndex = 0;
     characterScores = createEmptyScoreboard();
     winningCharacter = CHARACTER_ORDER[0];
+    resetDrawInteraction();
     resetAnswers();
     renderQuestion();
     transitionToScreen(screens.result, screens.quiz, null);
@@ -500,6 +624,7 @@
   els.btnStart.addEventListener("click", startQuiz);
   els.btnRetry.addEventListener("click", restartQuiz);
   els.btnPrev.addEventListener("click", goToPreviousQuestion);
+  initDrawInteraction();
   if (els.btnShare) {
     els.btnShare.addEventListener("click", shareResultCapture);
   }

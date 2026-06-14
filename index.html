@@ -71,7 +71,7 @@
       <!-- 結果頁 -->
       <section id="screen-result" class="screen" aria-label="測驗結果">
         <div class="result-shell">
-          <div id="capture-area" class="capture-area">
+          <div id="capture-area" class="capture-area draw-pending">
             <div class="capture-logo">
               <img
                 src="image/logo03.png"
@@ -90,7 +90,19 @@
             </div>
             <p class="capture-footer">© 北捷眾生怪．獨樂樂不如眾怪怪</p>
           </div>
-          <div class="result-actions">
+          <img
+            id="draw-hand"
+            src="image/hand.webp"
+            alt="抽籤的手"
+            decoding="async"
+          />
+          <img
+            id="fortune-pot"
+            src="image/籤筒.webp"
+            alt="籤筒"
+            decoding="async"
+          />
+          <div class="result-actions hidden-actions">
             <div class="result-buttons" role="group" aria-label="結果操作">
               <button type="button" class="btn btn--primary btn--copy-link" id="btn-copy-link">
                 分享網頁連結

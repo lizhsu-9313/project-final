@@ -630,12 +630,80 @@ body {
 }
 
 /* Result */
+#screen-result .result-shell {
+  position: relative;
+  width: 100%;
+  min-height: min(100dvh, 920px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 clamp(0.75rem, 4vw, 1.25rem) clamp(1.5rem, 5vw, 2.5rem);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
 .result-shell {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 0 clamp(0.75rem, 4vw, 1.25rem) clamp(1.5rem, 5vw, 2.5rem);
+}
+
+/* 抽籤：手（最上層，靠右邊界） */
+#draw-hand {
+  position: absolute;
+  right: 0;
+  bottom: 22%;
+  z-index: 20;
+  width: auto;
+  max-width: min(48vw, 220px);
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.5s ease;
+}
+
+#draw-hand.is-dragging {
+  cursor: grabbing;
+  transition: opacity 0.5s ease;
+}
+
+#draw-hand.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 抽籤：籤筒（最底層，靠下邊界置中） */
+#fortune-pot {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  z-index: 10;
+  width: auto;
+  max-width: min(88vw, 520px);
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  transform: translateX(-50%);
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+#fortune-pot.fade-out {
+  opacity: 0;
 }
 
 .capture-area {
@@ -652,6 +720,8 @@ body {
 }
 
 #capture-area {
+  position: relative;
+  z-index: 15;
   width: 100%;
   max-width: 400px;
   display: flex;
@@ -659,6 +729,24 @@ body {
   align-items: center;
   margin: 0 auto;
   padding: clamp(0.35rem, 1.5vw, 0.5rem) clamp(0.5rem, 3vw, 0.75rem) clamp(0.5rem, 2vw, 0.65rem);
+  transform: translateY(55vh);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#capture-area.draw-pending {
+  transform: translateY(55vh);
+}
+
+#capture-area.draw-complete {
+  transform: translateY(0);
+}
+
+#capture-area.is-dragging {
+  transition: none;
+}
+
+#draw-hand.is-dragging {
+  transition: opacity 0.5s ease;
 }
 
 .capture-logo {
@@ -708,12 +796,29 @@ body {
 }
 
 .result-actions {
+  position: relative;
+  z-index: 25;
   width: 100%;
   max-width: 400px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 0.75rem;
+  margin-top: clamp(0.85rem, 3vw, 1.1rem);
+}
+
+.result-actions.hidden-actions {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  margin-top: 0;
+  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.result-actions.hidden-actions.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
   margin-top: clamp(0.85rem, 3vw, 1.1rem);
 }
 
@@ -798,6 +903,17 @@ body {
   letter-spacing: 0.02em;
 }
 
+#screen-result.is-revealed .result-shell {
+  min-height: 0;
+  overflow: visible;
+  padding-top: clamp(0.35rem, 2vh, 0.75rem);
+}
+
+#screen-result.is-revealed #draw-hand,
+#screen-result.is-revealed #fortune-pot {
+  display: none;
+}
+
 /* ============================================
    RWD · iPhone（< 768px）與 iPad Air 4（≥ 768px）
    ※ 不影響 #hidden-photo-studio
@@ -871,6 +987,20 @@ body {
   .result-shell {
     padding-left: 0;
     padding-right: 0;
+  }
+
+  #screen-result .result-shell {
+    min-height: min(100dvh, 880px);
+  }
+
+  #draw-hand {
+    right: 0;
+    max-width: min(52vw, 200px);
+    bottom: 20%;
+  }
+
+  #fortune-pot {
+    max-width: min(92vw, 420px);
   }
 }
 
@@ -946,7 +1076,24 @@ body {
     line-height: 1.5;
   }
 
-  /* 結果頁：籤詩圖 500px；按鈕比例協調 */
+  /* 結果頁：籤詩圖 500px；按鈕比例協調；抽籤道具鎖定在卡片內 */
+  #screen-result .result-shell {
+    max-width: min(100%, 720px);
+    margin-left: auto;
+    margin-right: auto;
+    min-height: min(100dvh, 960px);
+  }
+
+  #draw-hand {
+    right: 0;
+    max-width: 240px;
+    bottom: 24%;
+  }
+
+  #fortune-pot {
+    max-width: 620px;
+  }
+
   #capture-area,
   #result-image {
     max-width: 500px;
