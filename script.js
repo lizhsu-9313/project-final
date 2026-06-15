@@ -159,19 +159,37 @@
     pointerId: null,
   };
 
-  function resetDrawInteraction() {
+  function lockDrawScroll() {
+    document.body.classList.add("draw-scroll-lock");
+  }
+
+  function unlockDrawScroll() {
+    document.body.classList.remove("draw-scroll-lock");
+  }
+
+  function activateLayerA() {
+    if (!els.layerADraw) return;
+    els.layerADraw.classList.remove("is-fading", "is-hidden");
+    els.layerADraw.classList.add("is-active");
+    els.layerADraw.setAttribute("aria-hidden", "false");
+    lockDrawScroll();
+  }
+
+  function deactivateLayerA() {
+    if (!els.layerADraw) return;
+    els.layerADraw.classList.remove("is-active", "is-fading");
+    els.layerADraw.classList.add("is-hidden");
+    els.layerADraw.setAttribute("aria-hidden", "true");
+    unlockDrawScroll();
+  }
+
+  function resetDrawState() {
     drawState.active = false;
     drawState.pullDistance = 0;
     drawState.completed = false;
     drawState.pointerId = null;
     screens.result.classList.remove("is-revealed");
 
-    if (els.layerADraw) {
-      els.layerADraw.classList.remove("is-fading", "is-hidden");
-      els.layerADraw.style.opacity = "";
-      els.layerADraw.style.pointerEvents = "";
-      els.layerADraw.setAttribute("aria-hidden", "false");
-    }
     if (els.drawHand) {
       els.drawHand.classList.remove("is-dragging");
       els.drawHand.style.transform = "";
@@ -181,6 +199,11 @@
       els.interactiveFortuneImg.style.transform =
         "translateX(-50%) translateY(" + FORTUNE_IMG_BASE_Y + ")";
     }
+  }
+
+  function resetDrawInteraction() {
+    resetDrawState();
+    activateLayerA();
   }
 
   function applyDrawPull(pullPx) {
@@ -227,9 +250,11 @@
 
     window.setTimeout(function () {
       if (els.layerADraw) {
+        els.layerADraw.classList.remove("is-active");
         els.layerADraw.classList.add("is-hidden");
         els.layerADraw.setAttribute("aria-hidden", "true");
       }
+      unlockDrawScroll();
       screens.result.classList.add("is-revealed");
       window.requestAnimationFrame(function () {
         playLogoSlideDownIn();
@@ -653,7 +678,8 @@
     currentIndex = 0;
     characterScores = createEmptyScoreboard();
     winningCharacter = CHARACTER_ORDER[0];
-    resetDrawInteraction();
+    resetDrawState();
+    deactivateLayerA();
     resetAnswers();
     renderQuestion();
     transitionToScreen(screens.result, screens.quiz, null);

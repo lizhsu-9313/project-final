@@ -111,28 +111,6 @@
               </p>
             </div>
           </div>
-
-          <!-- Layer a：互動抽籤圖層 -->
-          <div id="layer-a-draw" class="layer-a-draw" aria-hidden="false">
-            <img
-              id="fortune-pot"
-              src="image/籤筒.webp"
-              alt="籤筒"
-              decoding="async"
-            />
-            <img
-              id="interactive-fortune-img"
-              src="image/包豬公籤詩.webp"
-              alt="互動籤詩"
-              decoding="async"
-            />
-            <img
-              id="draw-hand"
-              src="image/hand.webp"
-              alt="抽籤的手"
-              decoding="async"
-            />
-          </div>
         </div>
       </section>
     </main>
@@ -140,6 +118,28 @@
     <footer class="footer">
       <p>© 北捷眾生怪．獨樂樂不如眾怪怪</p>
     </footer>
+  </div>
+
+  <!-- Layer a：互動抽籤（固定於視窗最上層，與 .app 同級避免被裁切） -->
+  <div id="layer-a-draw" class="layer-a-draw is-hidden" aria-hidden="true">
+    <img
+      id="fortune-pot"
+      src="image/籤筒.webp"
+      alt="籤筒"
+      decoding="async"
+    />
+    <img
+      id="interactive-fortune-img"
+      src="image/包豬公籤詩.webp"
+      alt="互動籤詩"
+      decoding="async"
+    />
+    <img
+      id="draw-hand"
+      src="image/hand.webp"
+      alt="抽籤的手"
+      decoding="async"
+    />
   </div>
 
   <!-- 隱形固定攝影棚：僅供分享導出，不影響畫面排版 -->

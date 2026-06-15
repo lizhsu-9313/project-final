@@ -662,19 +662,31 @@ body {
   align-items: center;
 }
 
-/* Layer a：互動抽籤（全螢幕滿版覆蓋） */
+/* Layer a：互動抽籤（視窗最頂層防漏滿版） */
 .layer-a-draw {
   position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  z-index: 50;
-  background-color: #1c2331;
-  overflow: hidden;
-  opacity: 1;
-  pointer-events: auto;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  z-index: 99999 !important;
+  background-color: #1c2331 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  box-sizing: border-box;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
   transition: opacity 0.6s ease;
+}
+
+.layer-a-draw.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .layer-a-draw.is-fading {
@@ -683,17 +695,31 @@ body {
 }
 
 .layer-a-draw.is-hidden {
+  opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  display: none;
 }
 
-/* 【底】籤筒：左右貼齊、靠下 */
+/* 抽籤進行中：鎖死全站滾動 */
+body.draw-scroll-lock,
+body.draw-scroll-lock .app {
+  overflow: hidden !important;
+  height: 100vh;
+  height: 100dvh;
+}
+
+body.draw-scroll-lock #screen-result {
+  overflow: hidden !important;
+}
+
+/* 【底】籤筒：以視窗為基準左右貼齊、靠下 */
 #layer-a-draw #fortune-pot {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
   height: auto;
   max-width: none;
   margin: 0;
@@ -727,10 +753,10 @@ body {
   transition: none;
 }
 
-/* 【上】手：靠右、放大 30% */
+/* 【上】手：以視窗為基準靠右、放大 30% */
 #layer-a-draw #draw-hand {
   position: absolute;
-  right: 0;
+  right: 0 !important;
   bottom: 22%;
   z-index: 3;
   width: auto;
@@ -920,11 +946,6 @@ body {
   min-height: 0;
   overflow: visible;
   padding-top: clamp(0.35rem, 2vh, 0.75rem);
-}
-
-#screen-result.is-revealed .layer-a-draw {
-  visibility: hidden;
-  pointer-events: none;
 }
 
 /* ============================================
