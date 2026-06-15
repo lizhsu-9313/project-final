@@ -183,6 +183,24 @@
     unlockDrawScroll();
   }
 
+  function getFortuneImgRestTransform() {
+    return (
+      "translateX(-50%) translateY(" +
+      FORTUNE_IMG_BASE_Y +
+      ")"
+    );
+  }
+
+  function getFortuneImgDragTransform(offsetPx) {
+    return (
+      "translateX(-50%) translateY(calc(" +
+      FORTUNE_IMG_BASE_Y +
+      " + " +
+      offsetPx +
+      "px))"
+    );
+  }
+
   function resetDrawState() {
     drawState.active = false;
     drawState.pullDistance = 0;
@@ -196,8 +214,7 @@
     }
     if (els.interactiveFortuneImg) {
       els.interactiveFortuneImg.classList.remove("is-dragging");
-      els.interactiveFortuneImg.style.transform =
-        "translateX(-50%) translateY(" + FORTUNE_IMG_BASE_Y + ")";
+      els.interactiveFortuneImg.style.transform = getFortuneImgRestTransform();
     }
   }
 
@@ -212,12 +229,7 @@
       els.drawHand.style.transform = "translateY(" + offset + "px)";
     }
     if (els.interactiveFortuneImg) {
-      els.interactiveFortuneImg.style.transform =
-        "translateX(-50%) translateY(calc(" +
-        FORTUNE_IMG_BASE_Y +
-        " + " +
-        offset +
-        "px))";
+      els.interactiveFortuneImg.style.transform = getFortuneImgDragTransform(offset);
     }
   }
 
@@ -228,8 +240,7 @@
     }
     if (els.interactiveFortuneImg) {
       els.interactiveFortuneImg.classList.remove("is-dragging");
-      els.interactiveFortuneImg.style.transform =
-        "translateX(-50%) translateY(" + FORTUNE_IMG_BASE_Y + ")";
+      els.interactiveFortuneImg.style.transform = getFortuneImgRestTransform();
     }
     drawState.pullDistance = 0;
   }

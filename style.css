@@ -713,7 +713,7 @@ body.draw-scroll-lock #screen-result {
   overflow: hidden !important;
 }
 
-/* 【底】籤筒：以視窗為基準左右貼齊、靠下 */
+/* 【底】籤筒：以視窗為基準左右貼齊、靠下微沉 */
 #layer-a-draw #fortune-pot {
   position: absolute;
   bottom: 0 !important;
@@ -726,19 +726,21 @@ body.draw-scroll-lock #screen-result {
   padding: 0;
   border: none;
   background: transparent;
-  z-index: 2;
+  z-index: 10 !important;
   pointer-events: none;
   object-fit: contain;
   object-position: center bottom;
+  transform: translateY(5vh);
+  transform: translateY(5dvh);
 }
 
-/* 【中】互動籤詩 WebP（埋於籤筒後方，較原尺寸縮小 20%） */
+/* 【中】互動籤詩 WebP（初始深埋 85vh，較原尺寸縮小 20%） */
 #interactive-fortune-img {
   position: absolute;
   left: 50%;
   bottom: auto;
   top: auto;
-  z-index: 1;
+  z-index: 15 !important;
   display: block;
   width: min(70.4vw, 336px);
   max-width: 73.6%;
@@ -754,14 +756,14 @@ body.draw-scroll-lock #screen-result {
   transition: none;
 }
 
-/* 【上】手：以視窗為基準靠右、放大 30% */
+/* 【上】手：靠右、再放大 30% */
 #layer-a-draw #draw-hand {
   position: absolute;
   right: 0 !important;
   bottom: 0 !important;
-  z-index: 3;
+  z-index: 20 !important;
   width: auto;
-  max-width: min(62.4vw, 286px);
+  max-width: min(80vw, 340px);
   height: auto;
   margin: 0;
   padding: 0;
@@ -1036,8 +1038,8 @@ body.draw-scroll-lock #screen-result {
   }
 
   #layer-a-draw #draw-hand {
-    right: 0;
-    max-width: min(65vw, 260px);
+    right: 0 !important;
+    max-width: min(80vw, 340px);
     bottom: 0 !important;
   }
 
@@ -1130,8 +1132,8 @@ body.draw-scroll-lock #screen-result {
   }
 
   #layer-a-draw #draw-hand {
-    right: 0;
-    max-width: 312px;
+    right: 0 !important;
+    max-width: 400px;
     bottom: 0 !important;
   }
 
