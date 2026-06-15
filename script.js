@@ -692,8 +692,12 @@
     resetDrawState();
     deactivateLayerA();
     resetAnswers();
-    renderQuestion();
-    transitionToScreen(screens.result, screens.quiz, null);
+    setProgress();
+    updatePrevButton();
+    transitionToScreen(screens.result, screens.home, function () {
+      clearLogoSlideDownIn();
+      unlockDrawScroll();
+    });
   }
 
   els.btnStart.addEventListener("click", startQuiz);
