@@ -726,26 +726,27 @@ body.draw-scroll-lock #screen-result {
   padding: 0;
   border: none;
   background: transparent;
-  z-index: 1;
+  z-index: 2;
   pointer-events: none;
   object-fit: contain;
   object-position: center bottom;
 }
 
-/* 【中】互動籤詩 WebP（較原尺寸縮小 20%） */
+/* 【中】互動籤詩 WebP（埋於籤筒後方，較原尺寸縮小 20%） */
 #interactive-fortune-img {
   position: absolute;
   left: 50%;
   bottom: auto;
   top: auto;
-  z-index: 2;
+  z-index: 1;
   display: block;
   width: min(70.4vw, 336px);
   max-width: 73.6%;
   height: auto;
   margin: 0 auto;
   pointer-events: none;
-  transform: translateX(-50%) translateY(55vh);
+  transform: translateX(-50%) translateY(85vh);
+  transform: translateX(-50%) translateY(85dvh);
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -757,7 +758,7 @@ body.draw-scroll-lock #screen-result {
 #layer-a-draw #draw-hand {
   position: absolute;
   right: 0 !important;
-  bottom: 22%;
+  bottom: 0 !important;
   z-index: 3;
   width: auto;
   max-width: min(62.4vw, 286px);
@@ -1037,7 +1038,7 @@ body.draw-scroll-lock #screen-result {
   #layer-a-draw #draw-hand {
     right: 0;
     max-width: min(65vw, 260px);
-    bottom: 20%;
+    bottom: 0 !important;
   }
 
   #interactive-fortune-img {
@@ -1131,7 +1132,7 @@ body.draw-scroll-lock #screen-result {
   #layer-a-draw #draw-hand {
     right: 0;
     max-width: 312px;
-    bottom: 24%;
+    bottom: 0 !important;
   }
 
   #interactive-fortune-img {
