@@ -342,7 +342,7 @@ body {
 .card--question .title--md,
 #question-text {
   white-space: pre-line;
-  font-size: 12pt;
+  font-size: 10pt;
   line-height: 1.45;
   font-weight: 600;
 }
@@ -520,7 +520,7 @@ body {
   text-align: left;
   padding: 1.125rem 1.75rem;
   font-family: inherit;
-  font-size: 10pt;
+  font-size: 8pt;
   line-height: 1.5;
   color: var(--color-text);
   background: var(--option-bg);
