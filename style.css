@@ -520,7 +520,7 @@ body {
   text-align: left;
   padding: 1.125rem 1.75rem;
   font-family: inherit;
-  font-size: 12pt;
+  font-size: 10pt !important;
   line-height: 1.5;
   color: var(--color-text);
   background: var(--option-bg);
@@ -996,7 +996,7 @@ body.draw-scroll-lock #screen-result {
   }
 
   #screen-quiz .option-btn {
-    font-size: 10pt;
+    font-size: 10pt !important;
   }
 
   .title--lg {
@@ -1120,7 +1120,7 @@ body.draw-scroll-lock #screen-result {
   .card--question .option-btn,
   #screen-quiz .option-btn {
     padding: 1.2375rem 1.925rem;
-    font-size: 10pt;
+    font-size: 10pt !important;
     line-height: 1.5;
   }
 
