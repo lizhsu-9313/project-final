@@ -98,6 +98,18 @@
 
   var DOWNLOAD_FILENAME = "北捷眾生怪-我的測驗結果.png";
 
+  /** Layer a 互動籤詩 WebP（僅抽籤用，不進導出攝影棚） */
+  var INTERACTIVE_FORTUNE_IMAGES = {
+    "包豬公": "image/包豬公籤詩.webp",
+    "獅咪罵誰": "image/獅咪罵誰籤詩.webp",
+    "石巴拉西": "image/石巴拉西籤詩.webp",
+    "雞雞喳喳": "image/雞雞喳喳籤詩.webp",
+    "門心自ven": "image/門心自ven籤詩.webp",
+    "狐臭非為": "image/狐臭非為籤詩.webp",
+  };
+
+  var FORTUNE_IMG_BASE_Y = "55vh";
+
   var screens = {
     home: document.getElementById("screen-home"),
     quiz: document.getElementById("screen-quiz"),
@@ -120,9 +132,10 @@
     btnShare: document.getElementById("btn-share"),
     btnCopyLink: document.getElementById("btn-copy-link"),
     captureArea: document.getElementById("capture-area"),
+    layerADraw: document.getElementById("layer-a-draw"),
     drawHand: document.getElementById("draw-hand"),
     fortunePot: document.getElementById("fortune-pot"),
-    resultActions: document.querySelector("#screen-result .result-actions"),
+    interactiveFortuneImg: document.getElementById("interactive-fortune-img"),
     hiddenPhotoStudio: document.getElementById("hidden-photo-studio"),
     studioResultImage: document.getElementById("studio-result-image"),
     siteLogo: document.querySelector("#home-title"),
@@ -153,23 +166,20 @@
     drawState.pointerId = null;
     screens.result.classList.remove("is-revealed");
 
-    if (els.captureArea) {
-      els.captureArea.classList.remove("draw-complete", "is-dragging");
-      els.captureArea.classList.add("draw-pending");
-      els.captureArea.style.transform = "";
+    if (els.layerADraw) {
+      els.layerADraw.classList.remove("is-fading", "is-hidden");
+      els.layerADraw.style.opacity = "";
+      els.layerADraw.style.pointerEvents = "";
+      els.layerADraw.setAttribute("aria-hidden", "false");
     }
     if (els.drawHand) {
-      els.drawHand.classList.remove("fade-out", "is-dragging");
+      els.drawHand.classList.remove("is-dragging");
       els.drawHand.style.transform = "";
-      els.drawHand.style.visibility = "";
     }
-    if (els.fortunePot) {
-      els.fortunePot.classList.remove("fade-out");
-      els.fortunePot.style.visibility = "";
-    }
-    if (els.resultActions) {
-      els.resultActions.classList.add("hidden-actions");
-      els.resultActions.classList.remove("show");
+    if (els.interactiveFortuneImg) {
+      els.interactiveFortuneImg.classList.remove("is-dragging");
+      els.interactiveFortuneImg.style.transform =
+        "translateX(-50%) translateY(" + FORTUNE_IMG_BASE_Y + ")";
     }
   }
 
@@ -178,10 +188,27 @@
     if (els.drawHand) {
       els.drawHand.style.transform = "translateY(" + offset + "px)";
     }
-    if (els.captureArea) {
-      els.captureArea.style.transform =
-        "translateY(calc(55vh + " + offset + "px))";
+    if (els.interactiveFortuneImg) {
+      els.interactiveFortuneImg.style.transform =
+        "translateX(-50%) translateY(calc(" +
+        FORTUNE_IMG_BASE_Y +
+        " + " +
+        offset +
+        "px))";
     }
+  }
+
+  function snapDrawBack() {
+    if (els.drawHand) {
+      els.drawHand.classList.remove("is-dragging");
+      els.drawHand.style.transform = "";
+    }
+    if (els.interactiveFortuneImg) {
+      els.interactiveFortuneImg.classList.remove("is-dragging");
+      els.interactiveFortuneImg.style.transform =
+        "translateX(-50%) translateY(" + FORTUNE_IMG_BASE_Y + ")";
+    }
+    drawState.pullDistance = 0;
   }
 
   function completeDrawInteraction() {
@@ -189,30 +216,26 @@
     drawState.completed = true;
     drawState.active = false;
 
-    if (els.captureArea) {
-      els.captureArea.classList.remove("is-dragging", "draw-pending");
-      els.captureArea.classList.add("draw-complete");
-      els.captureArea.style.transform = "";
-    }
-    if (els.drawHand) {
-      els.drawHand.classList.remove("is-dragging");
-      els.drawHand.classList.add("fade-out");
-    }
-    if (els.fortunePot) {
-      els.fortunePot.classList.add("fade-out");
+    if (els.drawHand) els.drawHand.classList.remove("is-dragging");
+    if (els.interactiveFortuneImg) {
+      els.interactiveFortuneImg.classList.remove("is-dragging");
     }
 
-    screens.result.classList.add("is-revealed");
+    if (els.layerADraw) {
+      els.layerADraw.classList.add("is-fading");
+    }
 
     window.setTimeout(function () {
-      if (els.drawHand) els.drawHand.style.visibility = "hidden";
-      if (els.fortunePot) els.fortunePot.style.visibility = "hidden";
-      if (els.resultActions) els.resultActions.classList.add("show");
+      if (els.layerADraw) {
+        els.layerADraw.classList.add("is-hidden");
+        els.layerADraw.setAttribute("aria-hidden", "true");
+      }
+      screens.result.classList.add("is-revealed");
       window.requestAnimationFrame(function () {
         playLogoSlideDownIn();
       });
       if (els.btnRetry) els.btnRetry.focus();
-    }, 500);
+    }, 600);
   }
 
   function onDrawPointerDown(e) {
@@ -221,8 +244,10 @@
     els.drawHand.setPointerCapture(e.pointerId);
     drawState.active = true;
     drawState.startPointerY = e.clientY;
-    if (els.captureArea) els.captureArea.classList.add("is-dragging");
     els.drawHand.classList.add("is-dragging");
+    if (els.interactiveFortuneImg) {
+      els.interactiveFortuneImg.classList.add("is-dragging");
+    }
     e.preventDefault();
   }
 
@@ -233,9 +258,6 @@
     if (pull < 0) pull = 0;
     drawState.pullDistance = pull;
     applyDrawPull(pull);
-    if (pull >= DRAW_PULL_THRESHOLD) {
-      completeDrawInteraction();
-    }
   }
 
   function onDrawPointerUp(e) {
@@ -247,11 +269,15 @@
     }
     drawState.active = false;
     drawState.pointerId = null;
+
     if (drawState.completed) return;
-    if (els.captureArea) els.captureArea.classList.remove("is-dragging");
-    els.drawHand.classList.remove("is-dragging");
-    drawState.pullDistance = 0;
-    applyDrawPull(0);
+
+    if (drawState.pullDistance >= DRAW_PULL_THRESHOLD) {
+      completeDrawInteraction();
+      return;
+    }
+
+    snapDrawBack();
   }
 
   function initDrawInteraction() {
@@ -476,16 +502,28 @@
     });
   }
 
+  function getInteractiveFortunePath(character) {
+    return (
+      INTERACTIVE_FORTUNE_IMAGES[character] ||
+      INTERACTIVE_FORTUNE_IMAGES["包豬公"]
+    );
+  }
+
   function setResultImage(character) {
-    var src = getResultImagePath(character);
+    var pngSrc = getResultImagePath(character);
+    var webpSrc = getInteractiveFortunePath(character);
     var alt = "你的測驗結果籤詩 — " + character;
     if (els.resultImage) {
-      els.resultImage.src = src;
+      els.resultImage.src = pngSrc;
       els.resultImage.alt = alt;
     }
     if (els.studioResultImage) {
-      els.studioResultImage.src = src;
+      els.studioResultImage.src = pngSrc;
       els.studioResultImage.alt = alt;
+    }
+    if (els.interactiveFortuneImg) {
+      els.interactiveFortuneImg.src = webpSrc;
+      els.interactiveFortuneImg.alt = "互動籤詩 — " + character;
     }
   }
 

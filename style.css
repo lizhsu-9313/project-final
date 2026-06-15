@@ -342,6 +342,9 @@ body {
 .card--question .title--md,
 #question-text {
   white-space: pre-line;
+  font-size: 16pt;
+  line-height: 1.45;
+  font-weight: 600;
 }
 
 .title {
@@ -517,7 +520,7 @@ body {
   text-align: left;
   padding: 1.125rem 1.75rem;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 14pt;
   line-height: 1.5;
   color: var(--color-text);
   background: var(--option-bg);
@@ -629,7 +632,7 @@ body {
   display: none;
 }
 
-/* Result */
+/* Result · Layer b + Layer a */
 #screen-result .result-shell {
   position: relative;
   width: 100%;
@@ -650,14 +653,85 @@ body {
   padding: 0 clamp(0.75rem, 4vw, 1.25rem) clamp(1.5rem, 5vw, 2.5rem);
 }
 
-/* 抽籤：手（最上層，靠右邊界） */
-#draw-hand {
+.layer-b-result {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Layer a：互動抽籤（覆蓋整個結果區） */
+.layer-a-draw {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  background-color: #1c2331;
+  overflow: hidden;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.6s ease;
+}
+
+.layer-a-draw.is-fading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.layer-a-draw.is-hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* 【底】籤筒：左右貼齊、靠下 */
+#layer-a-draw #fortune-pot {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  z-index: 1;
+  pointer-events: none;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+/* 【中】互動籤詩 WebP */
+#interactive-fortune-img {
+  position: absolute;
+  left: 50%;
+  bottom: auto;
+  top: auto;
+  z-index: 2;
+  display: block;
+  width: min(88vw, 420px);
+  max-width: 92%;
+  height: auto;
+  margin: 0 auto;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(55vh);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#interactive-fortune-img.is-dragging {
+  transition: none;
+}
+
+/* 【上】手：靠右、放大 30% */
+#layer-a-draw #draw-hand {
   position: absolute;
   right: 0;
   bottom: 22%;
-  z-index: 20;
+  z-index: 3;
   width: auto;
-  max-width: min(48vw, 220px);
+  max-width: min(62.4vw, 286px);
   height: auto;
   margin: 0;
   padding: 0;
@@ -669,41 +743,12 @@ body {
   -webkit-user-drag: none;
   pointer-events: auto;
   transform: translateY(0);
-  transition:
-    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.5s ease;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-#draw-hand.is-dragging {
+#layer-a-draw #draw-hand.is-dragging {
   cursor: grabbing;
-  transition: opacity 0.5s ease;
-}
-
-#draw-hand.fade-out {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* 抽籤：籤筒（最底層，靠下邊界置中） */
-#fortune-pot {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  z-index: 10;
-  width: auto;
-  max-width: min(88vw, 520px);
-  height: auto;
-  margin: 0;
-  padding: 0;
-  border: none;
-  background: transparent;
-  transform: translateX(-50%);
-  pointer-events: none;
-  transition: opacity 0.5s ease;
-}
-
-#fortune-pot.fade-out {
-  opacity: 0;
+  transition: none;
 }
 
 .capture-area {
@@ -721,7 +766,6 @@ body {
 
 #capture-area {
   position: relative;
-  z-index: 15;
   width: 100%;
   max-width: 400px;
   display: flex;
@@ -729,24 +773,6 @@ body {
   align-items: center;
   margin: 0 auto;
   padding: clamp(0.35rem, 1.5vw, 0.5rem) clamp(0.5rem, 3vw, 0.75rem) clamp(0.5rem, 2vw, 0.65rem);
-  transform: translateY(55vh);
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-#capture-area.draw-pending {
-  transform: translateY(55vh);
-}
-
-#capture-area.draw-complete {
-  transform: translateY(0);
-}
-
-#capture-area.is-dragging {
-  transition: none;
-}
-
-#draw-hand.is-dragging {
-  transition: opacity 0.5s ease;
 }
 
 .capture-logo {
@@ -797,28 +823,12 @@ body {
 
 .result-actions {
   position: relative;
-  z-index: 25;
   width: 100%;
   max-width: 400px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 0.75rem;
-  margin-top: clamp(0.85rem, 3vw, 1.1rem);
-}
-
-.result-actions.hidden-actions {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  margin-top: 0;
-  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.result-actions.hidden-actions.show {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
   margin-top: clamp(0.85rem, 3vw, 1.1rem);
 }
 
@@ -909,9 +919,9 @@ body {
   padding-top: clamp(0.35rem, 2vh, 0.75rem);
 }
 
-#screen-result.is-revealed #draw-hand,
-#screen-result.is-revealed #fortune-pot {
-  display: none;
+#screen-result.is-revealed .layer-a-draw {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 /* ============================================
@@ -954,6 +964,14 @@ body {
     line-height: 1.45;
   }
 
+  #screen-quiz #question-text {
+    font-size: 16pt;
+  }
+
+  #screen-quiz .option-btn {
+    font-size: 14pt;
+  }
+
   .title--lg {
     font-size: clamp(1.25rem, 5.5vw, 1.5rem);
   }
@@ -965,7 +983,6 @@ body {
   }
 
   .option-btn {
-    font-size: 1rem;
     line-height: 1.5;
   }
 
@@ -993,14 +1010,14 @@ body {
     min-height: min(100dvh, 880px);
   }
 
-  #draw-hand {
+  #layer-a-draw #draw-hand {
     right: 0;
-    max-width: min(52vw, 200px);
+    max-width: min(65vw, 260px);
     bottom: 20%;
   }
 
-  #fortune-pot {
-    max-width: min(92vw, 420px);
+  #interactive-fortune-img {
+    width: min(92vw, 390px);
   }
 }
 
@@ -1056,8 +1073,9 @@ body {
     padding: clamp(1.93rem, 5.5vw, 3.03rem);
   }
 
-  .card--question .title--md {
-    font-size: clamp(1.265rem, 4.2vw, 1.485rem);
+  .card--question .title--md,
+  #screen-quiz #question-text {
+    font-size: 16pt;
     line-height: 1.45;
   }
 
@@ -1070,9 +1088,10 @@ body {
     margin-top: 1.93rem;
   }
 
-  .card--question .option-btn {
+  .card--question .option-btn,
+  #screen-quiz .option-btn {
     padding: 1.2375rem 1.925rem;
-    font-size: 1.045rem;
+    font-size: 14pt;
     line-height: 1.5;
   }
 
@@ -1084,14 +1103,14 @@ body {
     min-height: min(100dvh, 960px);
   }
 
-  #draw-hand {
+  #layer-a-draw #draw-hand {
     right: 0;
-    max-width: 240px;
+    max-width: 312px;
     bottom: 24%;
   }
 
-  #fortune-pot {
-    max-width: 620px;
+  #interactive-fortune-img {
+    width: min(85vw, 480px);
   }
 
   #capture-area,

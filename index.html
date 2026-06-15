@@ -71,54 +71,67 @@
       <!-- 結果頁 -->
       <section id="screen-result" class="screen" aria-label="測驗結果">
         <div class="result-shell">
-          <div id="capture-area" class="capture-area draw-pending">
-            <div class="capture-logo">
-              <img
-                src="image/logo03.png"
-                alt="北捷眾生怪"
-                class="capture-site-logo"
-                decoding="async"
-              />
-            </div>
-            <div class="result-image-wrap">
-              <img
-                id="result-image"
-                src="image/包豬公.png"
-                alt="你的測驗結果籤詩"
-                decoding="async"
-              />
-            </div>
-            <p class="capture-footer">© 北捷眾生怪．獨樂樂不如眾怪怪</p>
-          </div>
-          <img
-            id="draw-hand"
-            src="image/hand.webp"
-            alt="抽籤的手"
-            decoding="async"
-          />
-          <img
-            id="fortune-pot"
-            src="image/籤筒.webp"
-            alt="籤筒"
-            decoding="async"
-          />
-          <div class="result-actions hidden-actions">
-            <div class="result-buttons" role="group" aria-label="結果操作">
-              <button type="button" class="btn btn--primary btn--copy-link" id="btn-copy-link">
-                分享網頁連結
-              </button>
-              <div class="result-buttons-row">
-                <button type="button" class="btn btn--ghost" id="btn-share">
-                  分享結果
-                </button>
-                <button type="button" class="btn btn--primary btn--result-retry" id="btn-retry">
-                  再玩一次
-                </button>
+          <!-- Layer b：原結果畫面與功能按鈕 -->
+          <div id="layer-b-result" class="layer-b-result">
+            <div id="capture-area" class="capture-area">
+              <div class="capture-logo">
+                <img
+                  src="image/logo03.png"
+                  alt="北捷眾生怪"
+                  class="capture-site-logo"
+                  decoding="async"
+                />
               </div>
+              <div class="result-image-wrap">
+                <img
+                  id="result-image"
+                  src="image/包豬公.png"
+                  alt="你的測驗結果籤詩"
+                  decoding="async"
+                />
+              </div>
+              <p class="capture-footer">© 北捷眾生怪．獨樂樂不如眾怪怪</p>
             </div>
-            <p class="result-download-hint">
-              提示：若無法下載，亦可長按圖片直接儲存籤詩喔！
-            </p>
+            <div class="result-actions">
+              <div class="result-buttons" role="group" aria-label="結果操作">
+                <button type="button" class="btn btn--primary btn--copy-link" id="btn-copy-link">
+                  分享網頁連結
+                </button>
+                <div class="result-buttons-row">
+                  <button type="button" class="btn btn--ghost" id="btn-share">
+                    分享結果
+                  </button>
+                  <button type="button" class="btn btn--primary btn--result-retry" id="btn-retry">
+                    再玩一次
+                  </button>
+                </div>
+              </div>
+              <p class="result-download-hint">
+                提示：若無法下載，亦可長按圖片直接儲存籤詩喔！
+              </p>
+            </div>
+          </div>
+
+          <!-- Layer a：互動抽籤圖層 -->
+          <div id="layer-a-draw" class="layer-a-draw" aria-hidden="false">
+            <img
+              id="fortune-pot"
+              src="image/籤筒.webp"
+              alt="籤筒"
+              decoding="async"
+            />
+            <img
+              id="interactive-fortune-img"
+              src="image/包豬公籤詩.webp"
+              alt="互動籤詩"
+              decoding="async"
+            />
+            <img
+              id="draw-hand"
+              src="image/hand.webp"
+              alt="抽籤的手"
+              decoding="async"
+            />
           </div>
         </div>
       </section>
