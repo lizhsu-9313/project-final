@@ -108,7 +108,7 @@
     "狐臭非為": "image/狐臭非為籤詩.webp",
   };
 
-  var FORTUNE_IMG_BASE_Y = "85vh";
+  var FORTUNE_IMG_BASE_Y = "93vh";
 
   var screens = {
     home: document.getElementById("screen-home"),
