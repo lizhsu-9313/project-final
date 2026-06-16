@@ -759,8 +759,8 @@ body.draw-scroll-lock #screen-result {
 #layer-a-draw #draw-hand {
   position: absolute;
   right: 0 !important;
-  bottom: -10vh !important;
-  bottom: -10dvh !important;
+  bottom: -30vh !important;
+  bottom: -30dvh !important;
   z-index: 20 !important;
   width: auto;
   max-width: min(90vw, 380px);
@@ -1040,8 +1040,8 @@ body.draw-scroll-lock #screen-result {
   #layer-a-draw #draw-hand {
     right: 0 !important;
     max-width: min(90vw, 380px);
-    bottom: -10vh !important;
-    bottom: -10dvh !important;
+    bottom: -30vh !important;
+    bottom: -30dvh !important;
   }
 
   #interactive-fortune-img {
@@ -1135,8 +1135,8 @@ body.draw-scroll-lock #screen-result {
   #layer-a-draw #draw-hand {
     right: 0 !important;
     max-width: 450px;
-    bottom: -10vh !important;
-    bottom: -10dvh !important;
+    bottom: -30vh !important;
+    bottom: -30dvh !important;
   }
 
   #interactive-fortune-img {
