@@ -810,7 +810,7 @@ body.draw-scroll-lock #screen-result {
   user-select: none;
   -webkit-user-drag: none;
   pointer-events: auto;
-  transform: translateY(var(--draw-hand-rest-y, 106px));
+  transform: translateY(var(--draw-hand-rest-y, 126px));
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
