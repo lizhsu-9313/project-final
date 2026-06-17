@@ -671,7 +671,7 @@ body {
   height: 100vh !important;
   height: 100dvh !important;
   z-index: 99999 !important;
-  background-color: #1c2331 !important;
+  background-color: #deca66 !important;
   overflow: hidden !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -711,6 +711,43 @@ body.draw-scroll-lock .app {
 
 body.draw-scroll-lock #screen-result {
   overflow: hidden !important;
+}
+
+/* 【頂】抽取指引：top 貼齊 + 固定 px 下移，全裝置位置一致 */
+#layer-a-draw #draw-instruction {
+  position: absolute;
+  top: 0 !important;
+  left: 50% !important;
+  transform: translate3d(-50%, 60px, 0) !important;
+  width: min(97.5vw, 360px) !important;
+  height: auto !important;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  display: block;
+  z-index: 12 !important;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+/* 【底·下】往上抽箭頭：偏右貼底、位於籤筒下方圖層 */
+#layer-a-draw #draw-arrow {
+  position: absolute;
+  bottom: 0 !important;
+  right: 12% !important;
+  width: min(46vw, 184px) !important;
+  height: auto !important;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  display: block;
+  opacity: 1;
+  z-index: 9 !important;
+  pointer-events: none;
+  animation: arrow-slide-up 2s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+  transition: opacity 0.5s ease;
 }
 
 /* 【底】籤筒：以視窗為基準左右貼齊、底邊完全貼齊 */
@@ -1268,5 +1305,22 @@ body.draw-scroll-lock #screen-result {
     animation: none;
     opacity: 1;
     transform: none;
+  }
+}
+
+@keyframes arrow-slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.9);
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-180px) scale(1);
   }
 }
