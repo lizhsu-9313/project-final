@@ -109,7 +109,7 @@
   };
 
   var FORTUNE_IMG_BASE_Y = "93vh";
-  var HAND_BOTTOM_OVERFLOW_PX = 64;
+  var HAND_BOTTOM_OVERFLOW_PX = 96;
 
   var screens = {
     home: document.getElementById("screen-home"),
