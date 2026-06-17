@@ -755,7 +755,7 @@ body.draw-scroll-lock #screen-result {
   transition: none;
 }
 
-/* 【上】手：bottom 貼底 + 固定像素上推（與籤筒上緣連動，不受 vh 影響） */
+/* 【上】手：bottom 貼底 + 正像素下移（下緣略超出畫面底邊） */
 #layer-a-draw #draw-hand {
   position: absolute;
   right: 0 !important;
@@ -773,7 +773,7 @@ body.draw-scroll-lock #screen-result {
   user-select: none;
   -webkit-user-drag: none;
   pointer-events: auto;
-  transform: translateY(var(--draw-hand-rest-y, -90px));
+  transform: translateY(var(--draw-hand-rest-y, 32px));
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 

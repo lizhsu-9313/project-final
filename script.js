@@ -109,8 +109,7 @@
   };
 
   var FORTUNE_IMG_BASE_Y = "93vh";
-  var DRAW_HAND_REST_FALLBACK_PX = 90;
-  var HAND_POT_RIM_OFFSET_PX = 8;
+  var HAND_BOTTOM_OVERFLOW_PX = 32;
 
   var screens = {
     home: document.getElementById("screen-home"),
@@ -159,7 +158,7 @@
     pullDistance: 0,
     completed: false,
     pointerId: null,
-    handRestLiftPx: DRAW_HAND_REST_FALLBACK_PX,
+    handRestShiftY: HAND_BOTTOM_OVERFLOW_PX,
   };
 
   function lockDrawScroll() {
@@ -186,24 +185,18 @@
     unlockDrawScroll();
   }
 
-  function getDrawHandRestLiftPx() {
-    if (els.fortunePot) {
-      var potHeight = els.fortunePot.getBoundingClientRect().height;
-      if (potHeight > 0) {
-        return Math.round(potHeight - HAND_POT_RIM_OFFSET_PX);
-      }
-    }
-    return DRAW_HAND_REST_FALLBACK_PX;
+  function getDrawHandRestShiftY() {
+    return HAND_BOTTOM_OVERFLOW_PX;
   }
 
   function getDrawHandRestTransform() {
-    return "translateY(-" + drawState.handRestLiftPx + "px)";
+    return "translateY(" + drawState.handRestShiftY + "px)";
   }
 
   function getDrawHandDragTransform(offsetPx) {
     return (
-      "translateY(calc(-" +
-      drawState.handRestLiftPx +
+      "translateY(calc(" +
+      drawState.handRestShiftY +
       "px + " +
       offsetPx +
       "px))"
@@ -212,11 +205,11 @@
 
   function syncDrawHandRestPosition() {
     if (!els.drawHand) return;
-    drawState.handRestLiftPx = getDrawHandRestLiftPx();
+    drawState.handRestShiftY = getDrawHandRestShiftY();
     if (els.layerADraw) {
       els.layerADraw.style.setProperty(
         "--draw-hand-rest-y",
-        "-" + drawState.handRestLiftPx + "px"
+        drawState.handRestShiftY + "px"
       );
     }
     if (!drawState.active) {
@@ -326,7 +319,7 @@
 
   function onDrawPointerDown(e) {
     if (drawState.completed || !els.drawHand) return;
-    drawState.handRestLiftPx = getDrawHandRestLiftPx();
+    drawState.handRestShiftY = getDrawHandRestShiftY();
     drawState.pointerId = e.pointerId;
     els.drawHand.setPointerCapture(e.pointerId);
     drawState.active = true;
