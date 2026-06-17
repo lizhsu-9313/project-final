@@ -109,6 +109,8 @@
   };
 
   var FORTUNE_IMG_BASE_Y = "93vh";
+  var DRAW_HAND_REST_FALLBACK_PX = 90;
+  var HAND_POT_RIM_OFFSET_PX = 8;
 
   var screens = {
     home: document.getElementById("screen-home"),
@@ -157,6 +159,7 @@
     pullDistance: 0,
     completed: false,
     pointerId: null,
+    handRestLiftPx: DRAW_HAND_REST_FALLBACK_PX,
   };
 
   function lockDrawScroll() {
@@ -181,6 +184,50 @@
     els.layerADraw.classList.add("is-hidden");
     els.layerADraw.setAttribute("aria-hidden", "true");
     unlockDrawScroll();
+  }
+
+  function getDrawHandRestLiftPx() {
+    if (els.fortunePot) {
+      var potHeight = els.fortunePot.getBoundingClientRect().height;
+      if (potHeight > 0) {
+        return Math.round(potHeight - HAND_POT_RIM_OFFSET_PX);
+      }
+    }
+    return DRAW_HAND_REST_FALLBACK_PX;
+  }
+
+  function getDrawHandRestTransform() {
+    return "translateY(-" + drawState.handRestLiftPx + "px)";
+  }
+
+  function getDrawHandDragTransform(offsetPx) {
+    return (
+      "translateY(calc(-" +
+      drawState.handRestLiftPx +
+      "px + " +
+      offsetPx +
+      "px))"
+    );
+  }
+
+  function syncDrawHandRestPosition() {
+    if (!els.drawHand) return;
+    drawState.handRestLiftPx = getDrawHandRestLiftPx();
+    if (els.layerADraw) {
+      els.layerADraw.style.setProperty(
+        "--draw-hand-rest-y",
+        "-" + drawState.handRestLiftPx + "px"
+      );
+    }
+    if (!drawState.active) {
+      els.drawHand.style.transform = getDrawHandRestTransform();
+    }
+  }
+
+  function onDrawLayerLayoutSync() {
+    if (!els.layerADraw || !els.layerADraw.classList.contains("is-active")) return;
+    if (drawState.active || drawState.completed) return;
+    syncDrawHandRestPosition();
   }
 
   function getFortuneImgRestTransform() {
@@ -210,7 +257,7 @@
 
     if (els.drawHand) {
       els.drawHand.classList.remove("is-dragging");
-      els.drawHand.style.transform = "";
+      syncDrawHandRestPosition();
     }
     if (els.interactiveFortuneImg) {
       els.interactiveFortuneImg.classList.remove("is-dragging");
@@ -221,12 +268,15 @@
   function resetDrawInteraction() {
     resetDrawState();
     activateLayerA();
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(syncDrawHandRestPosition);
+    });
   }
 
   function applyDrawPull(pullPx) {
     var offset = -pullPx;
     if (els.drawHand) {
-      els.drawHand.style.transform = "translateY(" + offset + "px)";
+      els.drawHand.style.transform = getDrawHandDragTransform(offset);
     }
     if (els.interactiveFortuneImg) {
       els.interactiveFortuneImg.style.transform = getFortuneImgDragTransform(offset);
@@ -236,7 +286,7 @@
   function snapDrawBack() {
     if (els.drawHand) {
       els.drawHand.classList.remove("is-dragging");
-      els.drawHand.style.transform = "";
+      els.drawHand.style.transform = getDrawHandRestTransform();
     }
     if (els.interactiveFortuneImg) {
       els.interactiveFortuneImg.classList.remove("is-dragging");
@@ -276,6 +326,7 @@
 
   function onDrawPointerDown(e) {
     if (drawState.completed || !els.drawHand) return;
+    drawState.handRestLiftPx = getDrawHandRestLiftPx();
     drawState.pointerId = e.pointerId;
     els.drawHand.setPointerCapture(e.pointerId);
     drawState.active = true;
@@ -322,6 +373,10 @@
     els.drawHand.addEventListener("pointermove", onDrawPointerMove);
     els.drawHand.addEventListener("pointerup", onDrawPointerUp);
     els.drawHand.addEventListener("pointercancel", onDrawPointerUp);
+    window.addEventListener("resize", onDrawLayerLayoutSync);
+    if (els.fortunePot) {
+      els.fortunePot.addEventListener("load", onDrawLayerLayoutSync);
+    }
   }
 
   function createEmptyScoreboard() {

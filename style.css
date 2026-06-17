@@ -755,12 +755,11 @@ body.draw-scroll-lock #screen-result {
   transition: none;
 }
 
-/* 【上】手：靠右下移、再放大 30% */
+/* 【上】手：bottom 貼底 + 固定像素上推（與籤筒上緣連動，不受 vh 影響） */
 #layer-a-draw #draw-hand {
   position: absolute;
   right: 0 !important;
-  bottom: -15vh !important;
-  bottom: -15dvh !important;
+  bottom: 0 !important;
   z-index: 20 !important;
   width: auto;
   max-width: min(90vw, 380px);
@@ -774,7 +773,7 @@ body.draw-scroll-lock #screen-result {
   user-select: none;
   -webkit-user-drag: none;
   pointer-events: auto;
-  transform: translateY(0);
+  transform: translateY(var(--draw-hand-rest-y, -90px));
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -1040,8 +1039,6 @@ body.draw-scroll-lock #screen-result {
   #layer-a-draw #draw-hand {
     right: 0 !important;
     max-width: min(90vw, 380px);
-    bottom: -15vh !important;
-    bottom: -15dvh !important;
   }
 
   #interactive-fortune-img {
@@ -1135,8 +1132,6 @@ body.draw-scroll-lock #screen-result {
   #layer-a-draw #draw-hand {
     right: 0 !important;
     max-width: 450px;
-    bottom: -15vh !important;
-    bottom: -15dvh !important;
   }
 
   #interactive-fortune-img {
